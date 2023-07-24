@@ -1,0 +1,29 @@
+syntax = "proto3";
+option java_package = "ds.project.service1";
+
+message HeatOutputRequest { // choose float instead of int32. take a look at math proj
+  float width_room = 1;
+  float  length_room = 2;
+  float height_room = 3;
+}
+
+message HeatOutput{
+  float  kW = 1; // choose float instead of int32. take a look at math proj
+  float BTU = 2;
+}
+
+message CostElectricRequest{
+  float consumptionkW = 1;
+  float kWCost = 2;
+}
+
+message CostElectricity{
+  float weekCost = 1;
+  float monthCost = 2;
+  float annualCost = 3;
+}
+
+service Service1{
+  rpc getHeatOutput(HeatOutputRequest) returns (HeatOutput);
+  rpc getCostOfElect(CostElectricRequest) returns (CostElectricity);
+}
