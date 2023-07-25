@@ -4,6 +4,7 @@ import ds.project.service1.Service1Grpc;
 import io.grpc.Server;
 import io.grpc.ServerBuilder;
 import ds.project.service1.Service1OuterClass;
+import io.grpc.Status;
 import io.grpc.stub.StreamObserver;
 
 import javax.jmdns.JmDNS;
@@ -92,8 +93,38 @@ public class gRPCServer {
     public static class Service1 extends Service1Grpc.Service1ImplBase{
         @Override
         public void getHeatOutput(Service1OuterClass.HeatOutputRequest request, StreamObserver<Service1OuterClass.HeatOutput> responseObserver) {
-            super.getHeatOutput(request, responseObserver);
+            double width;
+            double height;
+            double length;
+
+            try {
+
+                width = request.getWidthRoom();
+                height = request.getHeightRoom();
+                length = request.getLengthRoom();
+
+                if(width<=0 || height<= 0 || length<=0){
+                    Status status =Status.INVALID_ARGUMENT.withDescription("Type a number greater than 0 (zero)");
+                    responseObserver.onError(status.asRuntimeException());
+                    return;
+                }
+
+                Service1OuterClass.HeatOutput heatOutput = Service1OuterClass.HeatOutput.newBuilder()
+                        .setBTU(width * height * length * 6)
+                        .setKW(width * height * length * 0.0606)
+                        .build();
+
+                responseObserver.onNext(heatOutput);
+                responseObserver.onCompleted();
+            }
+
+            catch (NumberFormatException e){
+                Status status =Status.INVALID_ARGUMENT.withDescription("Invalid data. Only numbers are accepted");
+                responseObserver.onError(status.asRuntimeException());
+
+            }
         }
     }
+
 
 }

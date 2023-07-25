@@ -19,19 +19,19 @@ public final class Service1OuterClass {
       com.google.protobuf.MessageOrBuilder {
 
     /**
-     * <code>float width_room = 1;</code>
+     * <code>double width_room = 1;</code>
      */
-    float getWidthRoom();
+    double getWidthRoom();
 
     /**
-     * <code>float length_room = 2;</code>
+     * <code>double length_room = 2;</code>
      */
-    float getLengthRoom();
+    double getLengthRoom();
 
     /**
-     * <code>float height_room = 3;</code>
+     * <code>double height_room = 3;</code>
      */
-    float getHeightRoom();
+    double getHeightRoom();
   }
   /**
    * <pre>
@@ -50,9 +50,9 @@ public final class Service1OuterClass {
       super(builder);
     }
     private HeatOutputRequest() {
-      widthRoom_ = 0F;
-      lengthRoom_ = 0F;
-      heightRoom_ = 0F;
+      widthRoom_ = 0D;
+      lengthRoom_ = 0D;
+      heightRoom_ = 0D;
     }
 
     @java.lang.Override
@@ -79,19 +79,19 @@ public final class Service1OuterClass {
             case 0:
               done = true;
               break;
-            case 13: {
+            case 9: {
 
-              widthRoom_ = input.readFloat();
+              widthRoom_ = input.readDouble();
               break;
             }
-            case 21: {
+            case 17: {
 
-              lengthRoom_ = input.readFloat();
+              lengthRoom_ = input.readDouble();
               break;
             }
-            case 29: {
+            case 25: {
 
-              heightRoom_ = input.readFloat();
+              heightRoom_ = input.readDouble();
               break;
             }
             default: {
@@ -127,29 +127,29 @@ public final class Service1OuterClass {
     }
 
     public static final int WIDTH_ROOM_FIELD_NUMBER = 1;
-    private float widthRoom_;
+    private double widthRoom_;
     /**
-     * <code>float width_room = 1;</code>
+     * <code>double width_room = 1;</code>
      */
-    public float getWidthRoom() {
+    public double getWidthRoom() {
       return widthRoom_;
     }
 
     public static final int LENGTH_ROOM_FIELD_NUMBER = 2;
-    private float lengthRoom_;
+    private double lengthRoom_;
     /**
-     * <code>float length_room = 2;</code>
+     * <code>double length_room = 2;</code>
      */
-    public float getLengthRoom() {
+    public double getLengthRoom() {
       return lengthRoom_;
     }
 
     public static final int HEIGHT_ROOM_FIELD_NUMBER = 3;
-    private float heightRoom_;
+    private double heightRoom_;
     /**
-     * <code>float height_room = 3;</code>
+     * <code>double height_room = 3;</code>
      */
-    public float getHeightRoom() {
+    public double getHeightRoom() {
       return heightRoom_;
     }
 
@@ -167,14 +167,14 @@ public final class Service1OuterClass {
     @java.lang.Override
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
-      if (widthRoom_ != 0F) {
-        output.writeFloat(1, widthRoom_);
+      if (widthRoom_ != 0D) {
+        output.writeDouble(1, widthRoom_);
       }
-      if (lengthRoom_ != 0F) {
-        output.writeFloat(2, lengthRoom_);
+      if (lengthRoom_ != 0D) {
+        output.writeDouble(2, lengthRoom_);
       }
-      if (heightRoom_ != 0F) {
-        output.writeFloat(3, heightRoom_);
+      if (heightRoom_ != 0D) {
+        output.writeDouble(3, heightRoom_);
       }
       unknownFields.writeTo(output);
     }
@@ -185,17 +185,17 @@ public final class Service1OuterClass {
       if (size != -1) return size;
 
       size = 0;
-      if (widthRoom_ != 0F) {
+      if (widthRoom_ != 0D) {
         size += com.google.protobuf.CodedOutputStream
-          .computeFloatSize(1, widthRoom_);
+          .computeDoubleSize(1, widthRoom_);
       }
-      if (lengthRoom_ != 0F) {
+      if (lengthRoom_ != 0D) {
         size += com.google.protobuf.CodedOutputStream
-          .computeFloatSize(2, lengthRoom_);
+          .computeDoubleSize(2, lengthRoom_);
       }
-      if (heightRoom_ != 0F) {
+      if (heightRoom_ != 0D) {
         size += com.google.protobuf.CodedOutputStream
-          .computeFloatSize(3, heightRoom_);
+          .computeDoubleSize(3, heightRoom_);
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -214,16 +214,16 @@ public final class Service1OuterClass {
 
       boolean result = true;
       result = result && (
-          java.lang.Float.floatToIntBits(getWidthRoom())
-          == java.lang.Float.floatToIntBits(
+          java.lang.Double.doubleToLongBits(getWidthRoom())
+          == java.lang.Double.doubleToLongBits(
               other.getWidthRoom()));
       result = result && (
-          java.lang.Float.floatToIntBits(getLengthRoom())
-          == java.lang.Float.floatToIntBits(
+          java.lang.Double.doubleToLongBits(getLengthRoom())
+          == java.lang.Double.doubleToLongBits(
               other.getLengthRoom()));
       result = result && (
-          java.lang.Float.floatToIntBits(getHeightRoom())
-          == java.lang.Float.floatToIntBits(
+          java.lang.Double.doubleToLongBits(getHeightRoom())
+          == java.lang.Double.doubleToLongBits(
               other.getHeightRoom()));
       result = result && unknownFields.equals(other.unknownFields);
       return result;
@@ -237,14 +237,14 @@ public final class Service1OuterClass {
       int hash = 41;
       hash = (19 * hash) + getDescriptor().hashCode();
       hash = (37 * hash) + WIDTH_ROOM_FIELD_NUMBER;
-      hash = (53 * hash) + java.lang.Float.floatToIntBits(
-          getWidthRoom());
+      hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+          java.lang.Double.doubleToLongBits(getWidthRoom()));
       hash = (37 * hash) + LENGTH_ROOM_FIELD_NUMBER;
-      hash = (53 * hash) + java.lang.Float.floatToIntBits(
-          getLengthRoom());
+      hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+          java.lang.Double.doubleToLongBits(getLengthRoom()));
       hash = (37 * hash) + HEIGHT_ROOM_FIELD_NUMBER;
-      hash = (53 * hash) + java.lang.Float.floatToIntBits(
-          getHeightRoom());
+      hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+          java.lang.Double.doubleToLongBits(getHeightRoom()));
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
       return hash;
@@ -382,11 +382,11 @@ public final class Service1OuterClass {
       @java.lang.Override
       public Builder clear() {
         super.clear();
-        widthRoom_ = 0F;
+        widthRoom_ = 0D;
 
-        lengthRoom_ = 0F;
+        lengthRoom_ = 0D;
 
-        heightRoom_ = 0F;
+        heightRoom_ = 0D;
 
         return this;
       }
@@ -465,13 +465,13 @@ public final class Service1OuterClass {
 
       public Builder mergeFrom(ds.project.service1.Service1OuterClass.HeatOutputRequest other) {
         if (other == ds.project.service1.Service1OuterClass.HeatOutputRequest.getDefaultInstance()) return this;
-        if (other.getWidthRoom() != 0F) {
+        if (other.getWidthRoom() != 0D) {
           setWidthRoom(other.getWidthRoom());
         }
-        if (other.getLengthRoom() != 0F) {
+        if (other.getLengthRoom() != 0D) {
           setLengthRoom(other.getLengthRoom());
         }
-        if (other.getHeightRoom() != 0F) {
+        if (other.getHeightRoom() != 0D) {
           setHeightRoom(other.getHeightRoom());
         }
         this.mergeUnknownFields(other.unknownFields);
@@ -503,80 +503,80 @@ public final class Service1OuterClass {
         return this;
       }
 
-      private float widthRoom_ ;
+      private double widthRoom_ ;
       /**
-       * <code>float width_room = 1;</code>
+       * <code>double width_room = 1;</code>
        */
-      public float getWidthRoom() {
+      public double getWidthRoom() {
         return widthRoom_;
       }
       /**
-       * <code>float width_room = 1;</code>
+       * <code>double width_room = 1;</code>
        */
-      public Builder setWidthRoom(float value) {
+      public Builder setWidthRoom(double value) {
         
         widthRoom_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>float width_room = 1;</code>
+       * <code>double width_room = 1;</code>
        */
       public Builder clearWidthRoom() {
         
-        widthRoom_ = 0F;
+        widthRoom_ = 0D;
         onChanged();
         return this;
       }
 
-      private float lengthRoom_ ;
+      private double lengthRoom_ ;
       /**
-       * <code>float length_room = 2;</code>
+       * <code>double length_room = 2;</code>
        */
-      public float getLengthRoom() {
+      public double getLengthRoom() {
         return lengthRoom_;
       }
       /**
-       * <code>float length_room = 2;</code>
+       * <code>double length_room = 2;</code>
        */
-      public Builder setLengthRoom(float value) {
+      public Builder setLengthRoom(double value) {
         
         lengthRoom_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>float length_room = 2;</code>
+       * <code>double length_room = 2;</code>
        */
       public Builder clearLengthRoom() {
         
-        lengthRoom_ = 0F;
+        lengthRoom_ = 0D;
         onChanged();
         return this;
       }
 
-      private float heightRoom_ ;
+      private double heightRoom_ ;
       /**
-       * <code>float height_room = 3;</code>
+       * <code>double height_room = 3;</code>
        */
-      public float getHeightRoom() {
+      public double getHeightRoom() {
         return heightRoom_;
       }
       /**
-       * <code>float height_room = 3;</code>
+       * <code>double height_room = 3;</code>
        */
-      public Builder setHeightRoom(float value) {
+      public Builder setHeightRoom(double value) {
         
         heightRoom_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>float height_room = 3;</code>
+       * <code>double height_room = 3;</code>
        */
       public Builder clearHeightRoom() {
         
-        heightRoom_ = 0F;
+        heightRoom_ = 0D;
         onChanged();
         return this;
       }
@@ -642,14 +642,14 @@ public final class Service1OuterClass {
      * choose float instead of int32. take a look at math proj
      * </pre>
      *
-     * <code>float kW = 1;</code>
+     * <code>double kW = 1;</code>
      */
-    float getKW();
+    double getKW();
 
     /**
-     * <code>float BTU = 2;</code>
+     * <code>double BTU = 2;</code>
      */
-    float getBTU();
+    double getBTU();
   }
   /**
    * Protobuf type {@code HeatOutput}
@@ -664,8 +664,8 @@ public final class Service1OuterClass {
       super(builder);
     }
     private HeatOutput() {
-      kW_ = 0F;
-      bTU_ = 0F;
+      kW_ = 0D;
+      bTU_ = 0D;
     }
 
     @java.lang.Override
@@ -692,14 +692,14 @@ public final class Service1OuterClass {
             case 0:
               done = true;
               break;
-            case 13: {
+            case 9: {
 
-              kW_ = input.readFloat();
+              kW_ = input.readDouble();
               break;
             }
-            case 21: {
+            case 17: {
 
-              bTU_ = input.readFloat();
+              bTU_ = input.readDouble();
               break;
             }
             default: {
@@ -735,24 +735,24 @@ public final class Service1OuterClass {
     }
 
     public static final int KW_FIELD_NUMBER = 1;
-    private float kW_;
+    private double kW_;
     /**
      * <pre>
      * choose float instead of int32. take a look at math proj
      * </pre>
      *
-     * <code>float kW = 1;</code>
+     * <code>double kW = 1;</code>
      */
-    public float getKW() {
+    public double getKW() {
       return kW_;
     }
 
     public static final int BTU_FIELD_NUMBER = 2;
-    private float bTU_;
+    private double bTU_;
     /**
-     * <code>float BTU = 2;</code>
+     * <code>double BTU = 2;</code>
      */
-    public float getBTU() {
+    public double getBTU() {
       return bTU_;
     }
 
@@ -770,11 +770,11 @@ public final class Service1OuterClass {
     @java.lang.Override
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
-      if (kW_ != 0F) {
-        output.writeFloat(1, kW_);
+      if (kW_ != 0D) {
+        output.writeDouble(1, kW_);
       }
-      if (bTU_ != 0F) {
-        output.writeFloat(2, bTU_);
+      if (bTU_ != 0D) {
+        output.writeDouble(2, bTU_);
       }
       unknownFields.writeTo(output);
     }
@@ -785,13 +785,13 @@ public final class Service1OuterClass {
       if (size != -1) return size;
 
       size = 0;
-      if (kW_ != 0F) {
+      if (kW_ != 0D) {
         size += com.google.protobuf.CodedOutputStream
-          .computeFloatSize(1, kW_);
+          .computeDoubleSize(1, kW_);
       }
-      if (bTU_ != 0F) {
+      if (bTU_ != 0D) {
         size += com.google.protobuf.CodedOutputStream
-          .computeFloatSize(2, bTU_);
+          .computeDoubleSize(2, bTU_);
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -810,12 +810,12 @@ public final class Service1OuterClass {
 
       boolean result = true;
       result = result && (
-          java.lang.Float.floatToIntBits(getKW())
-          == java.lang.Float.floatToIntBits(
+          java.lang.Double.doubleToLongBits(getKW())
+          == java.lang.Double.doubleToLongBits(
               other.getKW()));
       result = result && (
-          java.lang.Float.floatToIntBits(getBTU())
-          == java.lang.Float.floatToIntBits(
+          java.lang.Double.doubleToLongBits(getBTU())
+          == java.lang.Double.doubleToLongBits(
               other.getBTU()));
       result = result && unknownFields.equals(other.unknownFields);
       return result;
@@ -829,11 +829,11 @@ public final class Service1OuterClass {
       int hash = 41;
       hash = (19 * hash) + getDescriptor().hashCode();
       hash = (37 * hash) + KW_FIELD_NUMBER;
-      hash = (53 * hash) + java.lang.Float.floatToIntBits(
-          getKW());
+      hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+          java.lang.Double.doubleToLongBits(getKW()));
       hash = (37 * hash) + BTU_FIELD_NUMBER;
-      hash = (53 * hash) + java.lang.Float.floatToIntBits(
-          getBTU());
+      hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+          java.lang.Double.doubleToLongBits(getBTU()));
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
       return hash;
@@ -967,9 +967,9 @@ public final class Service1OuterClass {
       @java.lang.Override
       public Builder clear() {
         super.clear();
-        kW_ = 0F;
+        kW_ = 0D;
 
-        bTU_ = 0F;
+        bTU_ = 0D;
 
         return this;
       }
@@ -1047,10 +1047,10 @@ public final class Service1OuterClass {
 
       public Builder mergeFrom(ds.project.service1.Service1OuterClass.HeatOutput other) {
         if (other == ds.project.service1.Service1OuterClass.HeatOutput.getDefaultInstance()) return this;
-        if (other.getKW() != 0F) {
+        if (other.getKW() != 0D) {
           setKW(other.getKW());
         }
-        if (other.getBTU() != 0F) {
+        if (other.getBTU() != 0D) {
           setBTU(other.getBTU());
         }
         this.mergeUnknownFields(other.unknownFields);
@@ -1082,15 +1082,15 @@ public final class Service1OuterClass {
         return this;
       }
 
-      private float kW_ ;
+      private double kW_ ;
       /**
        * <pre>
        * choose float instead of int32. take a look at math proj
        * </pre>
        *
-       * <code>float kW = 1;</code>
+       * <code>double kW = 1;</code>
        */
-      public float getKW() {
+      public double getKW() {
         return kW_;
       }
       /**
@@ -1098,9 +1098,9 @@ public final class Service1OuterClass {
        * choose float instead of int32. take a look at math proj
        * </pre>
        *
-       * <code>float kW = 1;</code>
+       * <code>double kW = 1;</code>
        */
-      public Builder setKW(float value) {
+      public Builder setKW(double value) {
         
         kW_ = value;
         onChanged();
@@ -1111,37 +1111,37 @@ public final class Service1OuterClass {
        * choose float instead of int32. take a look at math proj
        * </pre>
        *
-       * <code>float kW = 1;</code>
+       * <code>double kW = 1;</code>
        */
       public Builder clearKW() {
         
-        kW_ = 0F;
+        kW_ = 0D;
         onChanged();
         return this;
       }
 
-      private float bTU_ ;
+      private double bTU_ ;
       /**
-       * <code>float BTU = 2;</code>
+       * <code>double BTU = 2;</code>
        */
-      public float getBTU() {
+      public double getBTU() {
         return bTU_;
       }
       /**
-       * <code>float BTU = 2;</code>
+       * <code>double BTU = 2;</code>
        */
-      public Builder setBTU(float value) {
+      public Builder setBTU(double value) {
         
         bTU_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>float BTU = 2;</code>
+       * <code>double BTU = 2;</code>
        */
       public Builder clearBTU() {
         
-        bTU_ = 0F;
+        bTU_ = 0D;
         onChanged();
         return this;
       }
@@ -1203,14 +1203,14 @@ public final class Service1OuterClass {
       com.google.protobuf.MessageOrBuilder {
 
     /**
-     * <code>float consumptionkW = 1;</code>
+     * <code>double consumptionkW = 1;</code>
      */
-    float getConsumptionkW();
+    double getConsumptionkW();
 
     /**
-     * <code>float kWCost = 2;</code>
+     * <code>double kWCost = 2;</code>
      */
-    float getKWCost();
+    double getKWCost();
   }
   /**
    * Protobuf type {@code CostElectricRequest}
@@ -1225,8 +1225,8 @@ public final class Service1OuterClass {
       super(builder);
     }
     private CostElectricRequest() {
-      consumptionkW_ = 0F;
-      kWCost_ = 0F;
+      consumptionkW_ = 0D;
+      kWCost_ = 0D;
     }
 
     @java.lang.Override
@@ -1253,14 +1253,14 @@ public final class Service1OuterClass {
             case 0:
               done = true;
               break;
-            case 13: {
+            case 9: {
 
-              consumptionkW_ = input.readFloat();
+              consumptionkW_ = input.readDouble();
               break;
             }
-            case 21: {
+            case 17: {
 
-              kWCost_ = input.readFloat();
+              kWCost_ = input.readDouble();
               break;
             }
             default: {
@@ -1296,20 +1296,20 @@ public final class Service1OuterClass {
     }
 
     public static final int CONSUMPTIONKW_FIELD_NUMBER = 1;
-    private float consumptionkW_;
+    private double consumptionkW_;
     /**
-     * <code>float consumptionkW = 1;</code>
+     * <code>double consumptionkW = 1;</code>
      */
-    public float getConsumptionkW() {
+    public double getConsumptionkW() {
       return consumptionkW_;
     }
 
     public static final int KWCOST_FIELD_NUMBER = 2;
-    private float kWCost_;
+    private double kWCost_;
     /**
-     * <code>float kWCost = 2;</code>
+     * <code>double kWCost = 2;</code>
      */
-    public float getKWCost() {
+    public double getKWCost() {
       return kWCost_;
     }
 
@@ -1327,11 +1327,11 @@ public final class Service1OuterClass {
     @java.lang.Override
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
-      if (consumptionkW_ != 0F) {
-        output.writeFloat(1, consumptionkW_);
+      if (consumptionkW_ != 0D) {
+        output.writeDouble(1, consumptionkW_);
       }
-      if (kWCost_ != 0F) {
-        output.writeFloat(2, kWCost_);
+      if (kWCost_ != 0D) {
+        output.writeDouble(2, kWCost_);
       }
       unknownFields.writeTo(output);
     }
@@ -1342,13 +1342,13 @@ public final class Service1OuterClass {
       if (size != -1) return size;
 
       size = 0;
-      if (consumptionkW_ != 0F) {
+      if (consumptionkW_ != 0D) {
         size += com.google.protobuf.CodedOutputStream
-          .computeFloatSize(1, consumptionkW_);
+          .computeDoubleSize(1, consumptionkW_);
       }
-      if (kWCost_ != 0F) {
+      if (kWCost_ != 0D) {
         size += com.google.protobuf.CodedOutputStream
-          .computeFloatSize(2, kWCost_);
+          .computeDoubleSize(2, kWCost_);
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -1367,12 +1367,12 @@ public final class Service1OuterClass {
 
       boolean result = true;
       result = result && (
-          java.lang.Float.floatToIntBits(getConsumptionkW())
-          == java.lang.Float.floatToIntBits(
+          java.lang.Double.doubleToLongBits(getConsumptionkW())
+          == java.lang.Double.doubleToLongBits(
               other.getConsumptionkW()));
       result = result && (
-          java.lang.Float.floatToIntBits(getKWCost())
-          == java.lang.Float.floatToIntBits(
+          java.lang.Double.doubleToLongBits(getKWCost())
+          == java.lang.Double.doubleToLongBits(
               other.getKWCost()));
       result = result && unknownFields.equals(other.unknownFields);
       return result;
@@ -1386,11 +1386,11 @@ public final class Service1OuterClass {
       int hash = 41;
       hash = (19 * hash) + getDescriptor().hashCode();
       hash = (37 * hash) + CONSUMPTIONKW_FIELD_NUMBER;
-      hash = (53 * hash) + java.lang.Float.floatToIntBits(
-          getConsumptionkW());
+      hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+          java.lang.Double.doubleToLongBits(getConsumptionkW()));
       hash = (37 * hash) + KWCOST_FIELD_NUMBER;
-      hash = (53 * hash) + java.lang.Float.floatToIntBits(
-          getKWCost());
+      hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+          java.lang.Double.doubleToLongBits(getKWCost()));
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
       return hash;
@@ -1524,9 +1524,9 @@ public final class Service1OuterClass {
       @java.lang.Override
       public Builder clear() {
         super.clear();
-        consumptionkW_ = 0F;
+        consumptionkW_ = 0D;
 
-        kWCost_ = 0F;
+        kWCost_ = 0D;
 
         return this;
       }
@@ -1604,10 +1604,10 @@ public final class Service1OuterClass {
 
       public Builder mergeFrom(ds.project.service1.Service1OuterClass.CostElectricRequest other) {
         if (other == ds.project.service1.Service1OuterClass.CostElectricRequest.getDefaultInstance()) return this;
-        if (other.getConsumptionkW() != 0F) {
+        if (other.getConsumptionkW() != 0D) {
           setConsumptionkW(other.getConsumptionkW());
         }
-        if (other.getKWCost() != 0F) {
+        if (other.getKWCost() != 0D) {
           setKWCost(other.getKWCost());
         }
         this.mergeUnknownFields(other.unknownFields);
@@ -1639,54 +1639,54 @@ public final class Service1OuterClass {
         return this;
       }
 
-      private float consumptionkW_ ;
+      private double consumptionkW_ ;
       /**
-       * <code>float consumptionkW = 1;</code>
+       * <code>double consumptionkW = 1;</code>
        */
-      public float getConsumptionkW() {
+      public double getConsumptionkW() {
         return consumptionkW_;
       }
       /**
-       * <code>float consumptionkW = 1;</code>
+       * <code>double consumptionkW = 1;</code>
        */
-      public Builder setConsumptionkW(float value) {
+      public Builder setConsumptionkW(double value) {
         
         consumptionkW_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>float consumptionkW = 1;</code>
+       * <code>double consumptionkW = 1;</code>
        */
       public Builder clearConsumptionkW() {
         
-        consumptionkW_ = 0F;
+        consumptionkW_ = 0D;
         onChanged();
         return this;
       }
 
-      private float kWCost_ ;
+      private double kWCost_ ;
       /**
-       * <code>float kWCost = 2;</code>
+       * <code>double kWCost = 2;</code>
        */
-      public float getKWCost() {
+      public double getKWCost() {
         return kWCost_;
       }
       /**
-       * <code>float kWCost = 2;</code>
+       * <code>double kWCost = 2;</code>
        */
-      public Builder setKWCost(float value) {
+      public Builder setKWCost(double value) {
         
         kWCost_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>float kWCost = 2;</code>
+       * <code>double kWCost = 2;</code>
        */
       public Builder clearKWCost() {
         
-        kWCost_ = 0F;
+        kWCost_ = 0D;
         onChanged();
         return this;
       }
@@ -1748,19 +1748,19 @@ public final class Service1OuterClass {
       com.google.protobuf.MessageOrBuilder {
 
     /**
-     * <code>float weekCost = 1;</code>
+     * <code>double weekCost = 1;</code>
      */
-    float getWeekCost();
+    double getWeekCost();
 
     /**
-     * <code>float monthCost = 2;</code>
+     * <code>double monthCost = 2;</code>
      */
-    float getMonthCost();
+    double getMonthCost();
 
     /**
-     * <code>float annualCost = 3;</code>
+     * <code>double annualCost = 3;</code>
      */
-    float getAnnualCost();
+    double getAnnualCost();
   }
   /**
    * Protobuf type {@code CostElectricity}
@@ -1775,9 +1775,9 @@ public final class Service1OuterClass {
       super(builder);
     }
     private CostElectricity() {
-      weekCost_ = 0F;
-      monthCost_ = 0F;
-      annualCost_ = 0F;
+      weekCost_ = 0D;
+      monthCost_ = 0D;
+      annualCost_ = 0D;
     }
 
     @java.lang.Override
@@ -1804,19 +1804,19 @@ public final class Service1OuterClass {
             case 0:
               done = true;
               break;
-            case 13: {
+            case 9: {
 
-              weekCost_ = input.readFloat();
+              weekCost_ = input.readDouble();
               break;
             }
-            case 21: {
+            case 17: {
 
-              monthCost_ = input.readFloat();
+              monthCost_ = input.readDouble();
               break;
             }
-            case 29: {
+            case 25: {
 
-              annualCost_ = input.readFloat();
+              annualCost_ = input.readDouble();
               break;
             }
             default: {
@@ -1852,29 +1852,29 @@ public final class Service1OuterClass {
     }
 
     public static final int WEEKCOST_FIELD_NUMBER = 1;
-    private float weekCost_;
+    private double weekCost_;
     /**
-     * <code>float weekCost = 1;</code>
+     * <code>double weekCost = 1;</code>
      */
-    public float getWeekCost() {
+    public double getWeekCost() {
       return weekCost_;
     }
 
     public static final int MONTHCOST_FIELD_NUMBER = 2;
-    private float monthCost_;
+    private double monthCost_;
     /**
-     * <code>float monthCost = 2;</code>
+     * <code>double monthCost = 2;</code>
      */
-    public float getMonthCost() {
+    public double getMonthCost() {
       return monthCost_;
     }
 
     public static final int ANNUALCOST_FIELD_NUMBER = 3;
-    private float annualCost_;
+    private double annualCost_;
     /**
-     * <code>float annualCost = 3;</code>
+     * <code>double annualCost = 3;</code>
      */
-    public float getAnnualCost() {
+    public double getAnnualCost() {
       return annualCost_;
     }
 
@@ -1892,14 +1892,14 @@ public final class Service1OuterClass {
     @java.lang.Override
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
-      if (weekCost_ != 0F) {
-        output.writeFloat(1, weekCost_);
+      if (weekCost_ != 0D) {
+        output.writeDouble(1, weekCost_);
       }
-      if (monthCost_ != 0F) {
-        output.writeFloat(2, monthCost_);
+      if (monthCost_ != 0D) {
+        output.writeDouble(2, monthCost_);
       }
-      if (annualCost_ != 0F) {
-        output.writeFloat(3, annualCost_);
+      if (annualCost_ != 0D) {
+        output.writeDouble(3, annualCost_);
       }
       unknownFields.writeTo(output);
     }
@@ -1910,17 +1910,17 @@ public final class Service1OuterClass {
       if (size != -1) return size;
 
       size = 0;
-      if (weekCost_ != 0F) {
+      if (weekCost_ != 0D) {
         size += com.google.protobuf.CodedOutputStream
-          .computeFloatSize(1, weekCost_);
+          .computeDoubleSize(1, weekCost_);
       }
-      if (monthCost_ != 0F) {
+      if (monthCost_ != 0D) {
         size += com.google.protobuf.CodedOutputStream
-          .computeFloatSize(2, monthCost_);
+          .computeDoubleSize(2, monthCost_);
       }
-      if (annualCost_ != 0F) {
+      if (annualCost_ != 0D) {
         size += com.google.protobuf.CodedOutputStream
-          .computeFloatSize(3, annualCost_);
+          .computeDoubleSize(3, annualCost_);
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -1939,16 +1939,16 @@ public final class Service1OuterClass {
 
       boolean result = true;
       result = result && (
-          java.lang.Float.floatToIntBits(getWeekCost())
-          == java.lang.Float.floatToIntBits(
+          java.lang.Double.doubleToLongBits(getWeekCost())
+          == java.lang.Double.doubleToLongBits(
               other.getWeekCost()));
       result = result && (
-          java.lang.Float.floatToIntBits(getMonthCost())
-          == java.lang.Float.floatToIntBits(
+          java.lang.Double.doubleToLongBits(getMonthCost())
+          == java.lang.Double.doubleToLongBits(
               other.getMonthCost()));
       result = result && (
-          java.lang.Float.floatToIntBits(getAnnualCost())
-          == java.lang.Float.floatToIntBits(
+          java.lang.Double.doubleToLongBits(getAnnualCost())
+          == java.lang.Double.doubleToLongBits(
               other.getAnnualCost()));
       result = result && unknownFields.equals(other.unknownFields);
       return result;
@@ -1962,14 +1962,14 @@ public final class Service1OuterClass {
       int hash = 41;
       hash = (19 * hash) + getDescriptor().hashCode();
       hash = (37 * hash) + WEEKCOST_FIELD_NUMBER;
-      hash = (53 * hash) + java.lang.Float.floatToIntBits(
-          getWeekCost());
+      hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+          java.lang.Double.doubleToLongBits(getWeekCost()));
       hash = (37 * hash) + MONTHCOST_FIELD_NUMBER;
-      hash = (53 * hash) + java.lang.Float.floatToIntBits(
-          getMonthCost());
+      hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+          java.lang.Double.doubleToLongBits(getMonthCost()));
       hash = (37 * hash) + ANNUALCOST_FIELD_NUMBER;
-      hash = (53 * hash) + java.lang.Float.floatToIntBits(
-          getAnnualCost());
+      hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+          java.lang.Double.doubleToLongBits(getAnnualCost()));
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
       return hash;
@@ -2103,11 +2103,11 @@ public final class Service1OuterClass {
       @java.lang.Override
       public Builder clear() {
         super.clear();
-        weekCost_ = 0F;
+        weekCost_ = 0D;
 
-        monthCost_ = 0F;
+        monthCost_ = 0D;
 
-        annualCost_ = 0F;
+        annualCost_ = 0D;
 
         return this;
       }
@@ -2186,13 +2186,13 @@ public final class Service1OuterClass {
 
       public Builder mergeFrom(ds.project.service1.Service1OuterClass.CostElectricity other) {
         if (other == ds.project.service1.Service1OuterClass.CostElectricity.getDefaultInstance()) return this;
-        if (other.getWeekCost() != 0F) {
+        if (other.getWeekCost() != 0D) {
           setWeekCost(other.getWeekCost());
         }
-        if (other.getMonthCost() != 0F) {
+        if (other.getMonthCost() != 0D) {
           setMonthCost(other.getMonthCost());
         }
-        if (other.getAnnualCost() != 0F) {
+        if (other.getAnnualCost() != 0D) {
           setAnnualCost(other.getAnnualCost());
         }
         this.mergeUnknownFields(other.unknownFields);
@@ -2224,80 +2224,80 @@ public final class Service1OuterClass {
         return this;
       }
 
-      private float weekCost_ ;
+      private double weekCost_ ;
       /**
-       * <code>float weekCost = 1;</code>
+       * <code>double weekCost = 1;</code>
        */
-      public float getWeekCost() {
+      public double getWeekCost() {
         return weekCost_;
       }
       /**
-       * <code>float weekCost = 1;</code>
+       * <code>double weekCost = 1;</code>
        */
-      public Builder setWeekCost(float value) {
+      public Builder setWeekCost(double value) {
         
         weekCost_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>float weekCost = 1;</code>
+       * <code>double weekCost = 1;</code>
        */
       public Builder clearWeekCost() {
         
-        weekCost_ = 0F;
+        weekCost_ = 0D;
         onChanged();
         return this;
       }
 
-      private float monthCost_ ;
+      private double monthCost_ ;
       /**
-       * <code>float monthCost = 2;</code>
+       * <code>double monthCost = 2;</code>
        */
-      public float getMonthCost() {
+      public double getMonthCost() {
         return monthCost_;
       }
       /**
-       * <code>float monthCost = 2;</code>
+       * <code>double monthCost = 2;</code>
        */
-      public Builder setMonthCost(float value) {
+      public Builder setMonthCost(double value) {
         
         monthCost_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>float monthCost = 2;</code>
+       * <code>double monthCost = 2;</code>
        */
       public Builder clearMonthCost() {
         
-        monthCost_ = 0F;
+        monthCost_ = 0D;
         onChanged();
         return this;
       }
 
-      private float annualCost_ ;
+      private double annualCost_ ;
       /**
-       * <code>float annualCost = 3;</code>
+       * <code>double annualCost = 3;</code>
        */
-      public float getAnnualCost() {
+      public double getAnnualCost() {
         return annualCost_;
       }
       /**
-       * <code>float annualCost = 3;</code>
+       * <code>double annualCost = 3;</code>
        */
-      public Builder setAnnualCost(float value) {
+      public Builder setAnnualCost(double value) {
         
         annualCost_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>float annualCost = 3;</code>
+       * <code>double annualCost = 3;</code>
        */
       public Builder clearAnnualCost() {
         
-        annualCost_ = 0F;
+        annualCost_ = 0D;
         onChanged();
         return this;
       }
@@ -2384,12 +2384,12 @@ public final class Service1OuterClass {
   static {
     java.lang.String[] descriptorData = {
       "\n\016service1.proto\"Q\n\021HeatOutputRequest\022\022\n" +
-      "\nwidth_room\030\001 \001(\002\022\023\n\013length_room\030\002 \001(\002\022\023" +
-      "\n\013height_room\030\003 \001(\002\"%\n\nHeatOutput\022\n\n\002kW\030" +
-      "\001 \001(\002\022\013\n\003BTU\030\002 \001(\002\"<\n\023CostElectricReques" +
-      "t\022\025\n\rconsumptionkW\030\001 \001(\002\022\016\n\006kWCost\030\002 \001(\002" +
-      "\"J\n\017CostElectricity\022\020\n\010weekCost\030\001 \001(\002\022\021\n" +
-      "\tmonthCost\030\002 \001(\002\022\022\n\nannualCost\030\003 \001(\0022v\n\010" +
+      "\nwidth_room\030\001 \001(\001\022\023\n\013length_room\030\002 \001(\001\022\023" +
+      "\n\013height_room\030\003 \001(\001\"%\n\nHeatOutput\022\n\n\002kW\030" +
+      "\001 \001(\001\022\013\n\003BTU\030\002 \001(\001\"<\n\023CostElectricReques" +
+      "t\022\025\n\rconsumptionkW\030\001 \001(\001\022\016\n\006kWCost\030\002 \001(\001" +
+      "\"J\n\017CostElectricity\022\020\n\010weekCost\030\001 \001(\001\022\021\n" +
+      "\tmonthCost\030\002 \001(\001\022\022\n\nannualCost\030\003 \001(\0012v\n\010" +
       "Service1\0220\n\rgetHeatOutput\022\022.HeatOutputRe" +
       "quest\032\013.HeatOutput\0228\n\016getCostOfElect\022\024.C" +
       "ostElectricRequest\032\020.CostElectricityB\025\n\023" +
