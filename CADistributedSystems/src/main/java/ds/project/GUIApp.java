@@ -36,6 +36,9 @@ public class GUIApp extends JFrame {
 	private JTextField tFHeigth;
 
 	private JTextArea textResponse;
+	private JTextField tFPowerConsumed;
+	private JTextField tFCostElectricity;
+	private JTextArea txtResponseEnergyCost;
 
 
 
@@ -76,7 +79,7 @@ public class GUIApp extends JFrame {
 		//frame = new JFrame();
 		this.setTitle("Greener App");
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		this.setBounds(250, 150, 500, 500);
+		this.setBounds(250, 150, 600, 500);
 
 		this.setVisible(true);
 
@@ -132,21 +135,19 @@ public class GUIApp extends JFrame {
 
 	private void initialize(){
 
-
-
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 
-		JLabel lblNewLabel = new JLabel("Service 1 - Heat Calculator (Unary)");
-		lblNewLabel.setFont(new Font("Arial Black", Font.PLAIN, 14));
-		lblNewLabel.setBounds(89, 0, 368, 21);
+		JLabel lblNewLabel = new JLabel("Service 1 (Unary)");
+		lblNewLabel.setFont(new Font("Verdana", Font.BOLD, 14));
+		lblNewLabel.setBounds(196, 3, 218, 21);
 		contentPane.add(lblNewLabel);
 
-		JLabel lblNewLabel_1 = new JLabel("Room Dimensions (meters)");
-		lblNewLabel_1.setBounds(10, 31, 306, 13);
+		JLabel lblNewLabel_1 = new JLabel("1. Room Heat Calculator. Dimensions (meters)");
+		lblNewLabel_1.setBounds(10, 34, 306, 13);
 		contentPane.add(lblNewLabel_1);
 
 		JLabel lblNewLabel_2 = new JLabel("Width");
@@ -154,6 +155,7 @@ public class GUIApp extends JFrame {
 		contentPane.add(lblNewLabel_2);
 
 		tFWidth = new JTextField();
+		tFWidth.setHorizontalAlignment(SwingConstants.CENTER);
 		tFWidth.setBounds(43, 54, 82, 19);
 		contentPane.add(tFWidth);
 		tFWidth.setColumns(10);
@@ -163,6 +165,7 @@ public class GUIApp extends JFrame {
 		contentPane.add(lblNewLabel_3);
 
 		tFLength = new JTextField();
+		tFLength.setHorizontalAlignment(SwingConstants.CENTER);
 		tFLength.setBounds(190, 54, 96, 19);
 		contentPane.add(tFLength);
 		tFLength.setColumns(10);
@@ -172,31 +175,44 @@ public class GUIApp extends JFrame {
 		contentPane.add(lblNewLabel_4);
 
 		tFHeigth = new JTextField();
+		tFHeigth.setHorizontalAlignment(SwingConstants.CENTER);
 		tFHeigth.setBounds(349, 54, 96, 19);
 		contentPane.add(tFHeigth);
 		tFHeigth.setColumns(10);
 
-		JButton btnNewButton = new JButton("Calculate");
-		btnNewButton.addActionListener(new ActionListener() {
+		JButton BTNcalculateRoomHeat = new JButton("Calculate");
+		BTNcalculateRoomHeat.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				double width = Double.parseDouble(tFWidth.getText());
-				double length = Double.parseDouble(tFLength.getText());
-				double heigth = Double.parseDouble(tFHeigth.getText());
+				double width, length, heigth;
 
-				Service1OuterClass.HeatOutputRequest req = Service1OuterClass.HeatOutputRequest.newBuilder()
-						.setHeightRoom(heigth).setLengthRoom(length).setWidthRoom(width)
-						.build();
+				try {
 
-				Service1OuterClass.HeatOutput response = blockingStub.getHeatOutput(req);
+					width = Double.parseDouble(tFWidth.getText());
+					length = Double.parseDouble(tFLength.getText());
+					heigth = Double.parseDouble(tFHeigth.getText());
 
-				textResponse.append("BTU: "+response.getBTU()+"or kW: "+response.getKW()+"\n");
+					Service1OuterClass.HeatOutputRequest req = Service1OuterClass.HeatOutputRequest.newBuilder()
+							.setHeightRoom(heigth).setLengthRoom(length).setWidthRoom(width)
+							.build();
 
-				System.out.println("BTU: "+ response.getBTU()+"or kW: "+response.getKW());
-				
+					Service1OuterClass.HeatOutput response = blockingStub.getHeatOutput(req);
+
+					if (!response.getError().isEmpty()){
+						textResponse.append("Error: "+response.getError()+"\n");
+					}
+					else {
+						textResponse.append("BTU: " + response.getBTU() + " or kW: " + response.getKW() + "\n");
+					}
+					System.out.println("BTU: "+ response.getBTU()+" or kW: "+response.getKW());
+				}
+				catch (NumberFormatException ex){
+					textResponse.append("Fill in all fields with numbers only!\n");
+				}
+
 			}
 		});
-		btnNewButton.setBounds(43, 99, 85, 21);
-		contentPane.add(btnNewButton);
+		BTNcalculateRoomHeat.setBounds(7, 80, 118, 42);
+		contentPane.add(BTNcalculateRoomHeat);
 
 		textResponse = new JTextArea();
 		textResponse.setWrapStyleWord(true);
@@ -206,8 +222,78 @@ public class GUIApp extends JFrame {
 		textResponse.setBounds(151, 80, 294, 57);
 
 		JScrollPane scrollPane = new JScrollPane(textResponse);
-		scrollPane.setBounds(151, 80, 294, 57);
+		scrollPane.setBounds(135, 80, 441, 42);
 
 		contentPane.add(scrollPane);
+		
+		
+		//Service 1 Part 2 - Cost of Energy
+		
+		JLabel lblNewLabel_5 = new JLabel("2. Energy Cost Calculator");
+		lblNewLabel_5.setBounds(10, 132, 252, 13);
+		contentPane.add(lblNewLabel_5);
+		
+		JLabel lblNewLabel_6 = new JLabel("Average Power Consumed per day (kW)");
+		lblNewLabel_6.setBounds(10, 155, 261, 13);
+		contentPane.add(lblNewLabel_6);
+		
+		tFPowerConsumed = new JTextField();
+		tFPowerConsumed.setHorizontalAlignment(SwingConstants.CENTER);
+		tFPowerConsumed.setBounds(281, 152, 67, 19);
+		contentPane.add(tFPowerConsumed);
+		tFPowerConsumed.setColumns(10);
+		
+		JLabel lblNewLabel_7 = new JLabel("Cost of Electricity (cents per kW)");
+		lblNewLabel_7.setBounds(10, 178, 261, 13);
+		contentPane.add(lblNewLabel_7);
+		
+		tFCostElectricity = new JTextField();
+		tFCostElectricity.setBounds(281, 175, 67, 19);
+		contentPane.add(tFCostElectricity);
+		tFCostElectricity.setColumns(10);
+		
+		JButton BTNcalculateEnergyCost = new JButton("Calculate");
+		BTNcalculateEnergyCost.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+
+				double consumptionkW, kWCost;
+				try {
+					consumptionkW = Double.parseDouble(tFPowerConsumed.getText());
+					kWCost = Double.parseDouble(tFCostElectricity.getText());
+
+					Service1OuterClass.CostElectricRequest req = Service1OuterClass.CostElectricRequest.newBuilder()
+							.setConsumptionkW(consumptionkW).setKWCost(kWCost)
+							.build();
+							Service1OuterClass.CostElectricity response = blockingStub.getCostOfElect(req);
+
+					if (!response.getError().isEmpty()){
+						txtResponseEnergyCost.append("Error: "+response.getError()+"\n");
+					}
+					else {
+						txtResponseEnergyCost.append("Cost per Week: "+response.getWeekCost()+
+								" Cost per Month: "+response.getMonthCost()+" Cost per Year: "+response.getAnnualCost()+"\n");
+					}
+					System.out.println("Cost per Week: "+response.getWeekCost()+
+							" Cost per Month: "+response.getMonthCost()+" Cost per Year: "+response.getAnnualCost());
+				}
+				catch (NumberFormatException ex){
+					txtResponseEnergyCost.append("Filly in all fields wit numbers only ! \n");
+				}
+			}
+		});
+		BTNcalculateEnergyCost.setBounds(7, 206, 118, 60);
+		contentPane.add(BTNcalculateEnergyCost);
+		
+		txtResponseEnergyCost = new JTextArea();
+		txtResponseEnergyCost.setColumns(20);
+		txtResponseEnergyCost.setWrapStyleWord(true);
+		txtResponseEnergyCost.setRows(3);
+		txtResponseEnergyCost.setBounds(135, 207, 441, 58);
+		contentPane.add(txtResponseEnergyCost);
+		
+		JScrollPane scrollPaneCostElec = new JScrollPane(txtResponseEnergyCost);
+		scrollPaneCostElec.setBounds(135, 207, 441, 58);
+
+		contentPane.add(scrollPaneCostElec);
 	}
 }

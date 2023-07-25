@@ -1,15 +1,16 @@
 syntax = "proto3";
 option java_package = "ds.project.service1";
 
-message HeatOutputRequest { // choose float instead of int32. take a look at math proj
+message HeatOutputRequest {
   double width_room = 1;
   double length_room = 2;
   double height_room = 3;
 }
 
 message HeatOutput{
-  double  kW = 1; // choose float instead of int32. take a look at math proj
+  double  kW = 1;
   double BTU = 2;
+  string error = 3;
 }
 
 message CostElectricRequest{
@@ -21,6 +22,7 @@ message CostElectricity{
   double weekCost = 1;
   double monthCost = 2;
   double annualCost = 3;
+  string error = 4;
 }
 
 service Service1{

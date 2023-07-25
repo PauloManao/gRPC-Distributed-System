@@ -34,10 +34,6 @@ public final class Service1OuterClass {
     double getHeightRoom();
   }
   /**
-   * <pre>
-   * choose float instead of int32. take a look at math proj
-   * </pre>
-   *
    * Protobuf type {@code HeatOutputRequest}
    */
   public  static final class HeatOutputRequest extends
@@ -341,10 +337,6 @@ public final class Service1OuterClass {
       return builder;
     }
     /**
-     * <pre>
-     * choose float instead of int32. take a look at math proj
-     * </pre>
-     *
      * Protobuf type {@code HeatOutputRequest}
      */
     public static final class Builder extends
@@ -638,10 +630,6 @@ public final class Service1OuterClass {
       com.google.protobuf.MessageOrBuilder {
 
     /**
-     * <pre>
-     * choose float instead of int32. take a look at math proj
-     * </pre>
-     *
      * <code>double kW = 1;</code>
      */
     double getKW();
@@ -650,6 +638,16 @@ public final class Service1OuterClass {
      * <code>double BTU = 2;</code>
      */
     double getBTU();
+
+    /**
+     * <code>string error = 3;</code>
+     */
+    java.lang.String getError();
+    /**
+     * <code>string error = 3;</code>
+     */
+    com.google.protobuf.ByteString
+        getErrorBytes();
   }
   /**
    * Protobuf type {@code HeatOutput}
@@ -666,6 +664,7 @@ public final class Service1OuterClass {
     private HeatOutput() {
       kW_ = 0D;
       bTU_ = 0D;
+      error_ = "";
     }
 
     @java.lang.Override
@@ -700,6 +699,12 @@ public final class Service1OuterClass {
             case 17: {
 
               bTU_ = input.readDouble();
+              break;
+            }
+            case 26: {
+              java.lang.String s = input.readStringRequireUtf8();
+
+              error_ = s;
               break;
             }
             default: {
@@ -737,10 +742,6 @@ public final class Service1OuterClass {
     public static final int KW_FIELD_NUMBER = 1;
     private double kW_;
     /**
-     * <pre>
-     * choose float instead of int32. take a look at math proj
-     * </pre>
-     *
      * <code>double kW = 1;</code>
      */
     public double getKW() {
@@ -754,6 +755,40 @@ public final class Service1OuterClass {
      */
     public double getBTU() {
       return bTU_;
+    }
+
+    public static final int ERROR_FIELD_NUMBER = 3;
+    private volatile java.lang.Object error_;
+    /**
+     * <code>string error = 3;</code>
+     */
+    public java.lang.String getError() {
+      java.lang.Object ref = error_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        error_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>string error = 3;</code>
+     */
+    public com.google.protobuf.ByteString
+        getErrorBytes() {
+      java.lang.Object ref = error_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        error_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
     }
 
     private byte memoizedIsInitialized = -1;
@@ -776,6 +811,9 @@ public final class Service1OuterClass {
       if (bTU_ != 0D) {
         output.writeDouble(2, bTU_);
       }
+      if (!getErrorBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 3, error_);
+      }
       unknownFields.writeTo(output);
     }
 
@@ -792,6 +830,9 @@ public final class Service1OuterClass {
       if (bTU_ != 0D) {
         size += com.google.protobuf.CodedOutputStream
           .computeDoubleSize(2, bTU_);
+      }
+      if (!getErrorBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, error_);
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -817,6 +858,8 @@ public final class Service1OuterClass {
           java.lang.Double.doubleToLongBits(getBTU())
           == java.lang.Double.doubleToLongBits(
               other.getBTU()));
+      result = result && getError()
+          .equals(other.getError());
       result = result && unknownFields.equals(other.unknownFields);
       return result;
     }
@@ -834,6 +877,8 @@ public final class Service1OuterClass {
       hash = (37 * hash) + BTU_FIELD_NUMBER;
       hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
           java.lang.Double.doubleToLongBits(getBTU()));
+      hash = (37 * hash) + ERROR_FIELD_NUMBER;
+      hash = (53 * hash) + getError().hashCode();
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
       return hash;
@@ -971,6 +1016,8 @@ public final class Service1OuterClass {
 
         bTU_ = 0D;
 
+        error_ = "";
+
         return this;
       }
 
@@ -999,6 +1046,7 @@ public final class Service1OuterClass {
         ds.project.service1.Service1OuterClass.HeatOutput result = new ds.project.service1.Service1OuterClass.HeatOutput(this);
         result.kW_ = kW_;
         result.bTU_ = bTU_;
+        result.error_ = error_;
         onBuilt();
         return result;
       }
@@ -1053,6 +1101,10 @@ public final class Service1OuterClass {
         if (other.getBTU() != 0D) {
           setBTU(other.getBTU());
         }
+        if (!other.getError().isEmpty()) {
+          error_ = other.error_;
+          onChanged();
+        }
         this.mergeUnknownFields(other.unknownFields);
         onChanged();
         return this;
@@ -1084,20 +1136,12 @@ public final class Service1OuterClass {
 
       private double kW_ ;
       /**
-       * <pre>
-       * choose float instead of int32. take a look at math proj
-       * </pre>
-       *
        * <code>double kW = 1;</code>
        */
       public double getKW() {
         return kW_;
       }
       /**
-       * <pre>
-       * choose float instead of int32. take a look at math proj
-       * </pre>
-       *
        * <code>double kW = 1;</code>
        */
       public Builder setKW(double value) {
@@ -1107,10 +1151,6 @@ public final class Service1OuterClass {
         return this;
       }
       /**
-       * <pre>
-       * choose float instead of int32. take a look at math proj
-       * </pre>
-       *
        * <code>double kW = 1;</code>
        */
       public Builder clearKW() {
@@ -1142,6 +1182,75 @@ public final class Service1OuterClass {
       public Builder clearBTU() {
         
         bTU_ = 0D;
+        onChanged();
+        return this;
+      }
+
+      private java.lang.Object error_ = "";
+      /**
+       * <code>string error = 3;</code>
+       */
+      public java.lang.String getError() {
+        java.lang.Object ref = error_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          error_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>string error = 3;</code>
+       */
+      public com.google.protobuf.ByteString
+          getErrorBytes() {
+        java.lang.Object ref = error_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          error_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>string error = 3;</code>
+       */
+      public Builder setError(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        error_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string error = 3;</code>
+       */
+      public Builder clearError() {
+        
+        error_ = getDefaultInstance().getError();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string error = 3;</code>
+       */
+      public Builder setErrorBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        error_ = value;
         onChanged();
         return this;
       }
@@ -1761,6 +1870,16 @@ public final class Service1OuterClass {
      * <code>double annualCost = 3;</code>
      */
     double getAnnualCost();
+
+    /**
+     * <code>string error = 4;</code>
+     */
+    java.lang.String getError();
+    /**
+     * <code>string error = 4;</code>
+     */
+    com.google.protobuf.ByteString
+        getErrorBytes();
   }
   /**
    * Protobuf type {@code CostElectricity}
@@ -1778,6 +1897,7 @@ public final class Service1OuterClass {
       weekCost_ = 0D;
       monthCost_ = 0D;
       annualCost_ = 0D;
+      error_ = "";
     }
 
     @java.lang.Override
@@ -1817,6 +1937,12 @@ public final class Service1OuterClass {
             case 25: {
 
               annualCost_ = input.readDouble();
+              break;
+            }
+            case 34: {
+              java.lang.String s = input.readStringRequireUtf8();
+
+              error_ = s;
               break;
             }
             default: {
@@ -1878,6 +2004,40 @@ public final class Service1OuterClass {
       return annualCost_;
     }
 
+    public static final int ERROR_FIELD_NUMBER = 4;
+    private volatile java.lang.Object error_;
+    /**
+     * <code>string error = 4;</code>
+     */
+    public java.lang.String getError() {
+      java.lang.Object ref = error_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        error_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>string error = 4;</code>
+     */
+    public com.google.protobuf.ByteString
+        getErrorBytes() {
+      java.lang.Object ref = error_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        error_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
     private byte memoizedIsInitialized = -1;
     @java.lang.Override
     public final boolean isInitialized() {
@@ -1901,6 +2061,9 @@ public final class Service1OuterClass {
       if (annualCost_ != 0D) {
         output.writeDouble(3, annualCost_);
       }
+      if (!getErrorBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 4, error_);
+      }
       unknownFields.writeTo(output);
     }
 
@@ -1921,6 +2084,9 @@ public final class Service1OuterClass {
       if (annualCost_ != 0D) {
         size += com.google.protobuf.CodedOutputStream
           .computeDoubleSize(3, annualCost_);
+      }
+      if (!getErrorBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(4, error_);
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -1950,6 +2116,8 @@ public final class Service1OuterClass {
           java.lang.Double.doubleToLongBits(getAnnualCost())
           == java.lang.Double.doubleToLongBits(
               other.getAnnualCost()));
+      result = result && getError()
+          .equals(other.getError());
       result = result && unknownFields.equals(other.unknownFields);
       return result;
     }
@@ -1970,6 +2138,8 @@ public final class Service1OuterClass {
       hash = (37 * hash) + ANNUALCOST_FIELD_NUMBER;
       hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
           java.lang.Double.doubleToLongBits(getAnnualCost()));
+      hash = (37 * hash) + ERROR_FIELD_NUMBER;
+      hash = (53 * hash) + getError().hashCode();
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
       return hash;
@@ -2109,6 +2279,8 @@ public final class Service1OuterClass {
 
         annualCost_ = 0D;
 
+        error_ = "";
+
         return this;
       }
 
@@ -2138,6 +2310,7 @@ public final class Service1OuterClass {
         result.weekCost_ = weekCost_;
         result.monthCost_ = monthCost_;
         result.annualCost_ = annualCost_;
+        result.error_ = error_;
         onBuilt();
         return result;
       }
@@ -2194,6 +2367,10 @@ public final class Service1OuterClass {
         }
         if (other.getAnnualCost() != 0D) {
           setAnnualCost(other.getAnnualCost());
+        }
+        if (!other.getError().isEmpty()) {
+          error_ = other.error_;
+          onChanged();
         }
         this.mergeUnknownFields(other.unknownFields);
         onChanged();
@@ -2301,6 +2478,75 @@ public final class Service1OuterClass {
         onChanged();
         return this;
       }
+
+      private java.lang.Object error_ = "";
+      /**
+       * <code>string error = 4;</code>
+       */
+      public java.lang.String getError() {
+        java.lang.Object ref = error_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          error_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>string error = 4;</code>
+       */
+      public com.google.protobuf.ByteString
+          getErrorBytes() {
+        java.lang.Object ref = error_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          error_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>string error = 4;</code>
+       */
+      public Builder setError(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        error_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string error = 4;</code>
+       */
+      public Builder clearError() {
+        
+        error_ = getDefaultInstance().getError();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string error = 4;</code>
+       */
+      public Builder setErrorBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        error_ = value;
+        onChanged();
+        return this;
+      }
       @java.lang.Override
       public final Builder setUnknownFields(
           final com.google.protobuf.UnknownFieldSet unknownFields) {
@@ -2385,15 +2631,16 @@ public final class Service1OuterClass {
     java.lang.String[] descriptorData = {
       "\n\016service1.proto\"Q\n\021HeatOutputRequest\022\022\n" +
       "\nwidth_room\030\001 \001(\001\022\023\n\013length_room\030\002 \001(\001\022\023" +
-      "\n\013height_room\030\003 \001(\001\"%\n\nHeatOutput\022\n\n\002kW\030" +
-      "\001 \001(\001\022\013\n\003BTU\030\002 \001(\001\"<\n\023CostElectricReques" +
-      "t\022\025\n\rconsumptionkW\030\001 \001(\001\022\016\n\006kWCost\030\002 \001(\001" +
-      "\"J\n\017CostElectricity\022\020\n\010weekCost\030\001 \001(\001\022\021\n" +
-      "\tmonthCost\030\002 \001(\001\022\022\n\nannualCost\030\003 \001(\0012v\n\010" +
-      "Service1\0220\n\rgetHeatOutput\022\022.HeatOutputRe" +
-      "quest\032\013.HeatOutput\0228\n\016getCostOfElect\022\024.C" +
-      "ostElectricRequest\032\020.CostElectricityB\025\n\023" +
-      "ds.project.service1b\006proto3"
+      "\n\013height_room\030\003 \001(\001\"4\n\nHeatOutput\022\n\n\002kW\030" +
+      "\001 \001(\001\022\013\n\003BTU\030\002 \001(\001\022\r\n\005error\030\003 \001(\t\"<\n\023Cos" +
+      "tElectricRequest\022\025\n\rconsumptionkW\030\001 \001(\001\022" +
+      "\016\n\006kWCost\030\002 \001(\001\"Y\n\017CostElectricity\022\020\n\010we" +
+      "ekCost\030\001 \001(\001\022\021\n\tmonthCost\030\002 \001(\001\022\022\n\nannua" +
+      "lCost\030\003 \001(\001\022\r\n\005error\030\004 \001(\t2v\n\010Service1\0220" +
+      "\n\rgetHeatOutput\022\022.HeatOutputRequest\032\013.He" +
+      "atOutput\0228\n\016getCostOfElect\022\024.CostElectri" +
+      "cRequest\032\020.CostElectricityB\025\n\023ds.project" +
+      ".service1b\006proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -2418,7 +2665,7 @@ public final class Service1OuterClass {
     internal_static_HeatOutput_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_HeatOutput_descriptor,
-        new java.lang.String[] { "KW", "BTU", });
+        new java.lang.String[] { "KW", "BTU", "Error", });
     internal_static_CostElectricRequest_descriptor =
       getDescriptor().getMessageTypes().get(2);
     internal_static_CostElectricRequest_fieldAccessorTable = new
@@ -2430,7 +2677,7 @@ public final class Service1OuterClass {
     internal_static_CostElectricity_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_CostElectricity_descriptor,
-        new java.lang.String[] { "WeekCost", "MonthCost", "AnnualCost", });
+        new java.lang.String[] { "WeekCost", "MonthCost", "AnnualCost", "Error", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)

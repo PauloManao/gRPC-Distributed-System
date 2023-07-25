@@ -104,8 +104,12 @@ public class gRPCServer {
                 length = request.getLengthRoom();
 
                 if(width<=0 || height<= 0 || length<=0){
-                    Status status =Status.INVALID_ARGUMENT.withDescription("Type a number greater than 0 (zero)");
-                    responseObserver.onError(status.asRuntimeException());
+                    String errorMessage = "Type numbers greater than 0 (zero)";
+                    Service1OuterClass.HeatOutput response = Service1OuterClass.HeatOutput.newBuilder()
+                            .setError(errorMessage)
+                            .build();
+                    responseObserver.onNext(response);
+                    responseObserver.onCompleted();
                     return;
                 }
 
@@ -119,10 +123,53 @@ public class gRPCServer {
             }
 
             catch (NumberFormatException e){
-                Status status =Status.INVALID_ARGUMENT.withDescription("Invalid data. Only numbers are accepted");
-                responseObserver.onError(status.asRuntimeException());
+                String errorMessage = "Fill in all fields with numbers only";
+                Service1OuterClass.HeatOutput response = Service1OuterClass.HeatOutput.newBuilder()
+                        .setError(errorMessage)
+                        .build();
+                responseObserver.onNext(response);
+                responseObserver.onCompleted();
 
             }
+        }
+
+        @Override
+        public void getCostOfElect(Service1OuterClass.CostElectricRequest request, StreamObserver<Service1OuterClass.CostElectricity> responseObserver) {
+            double consumptionkW;
+            double kWCost;
+
+            try{
+                consumptionkW =request.getConsumptionkW();
+                kWCost = request.getKWCost();
+
+                if (consumptionkW <= 0 || kWCost <= 0 ){
+                    String errorMessage = "Type numbers greater than 0(zero)";
+                    Service1OuterClass.CostElectricity response = Service1OuterClass.CostElectricity.newBuilder()
+                            .setError(errorMessage)
+                            .build();
+                    responseObserver.onNext(response);
+                    responseObserver.onCompleted();
+                    return;
+                }
+            Service1OuterClass.CostElectricity costElectricity = Service1OuterClass.CostElectricity.newBuilder()
+                    .setAnnualCost(consumptionkW * kWCost * 365)
+                    .setMonthCost(consumptionkW * kWCost *30)
+                    .setWeekCost(consumptionkW * kWCost * 7)
+                    .build();
+
+                responseObserver.onNext(costElectricity);
+                responseObserver.onCompleted();
+
+            }
+            catch (NumberFormatException e){
+                String errorMessage = "Fill in all fields with numbers only!\n";
+                Service1OuterClass.CostElectricity response = Service1OuterClass.CostElectricity.newBuilder()
+                        .setError(errorMessage)
+                        .build();
+                responseObserver.onNext(response);
+                responseObserver.onCompleted();
+            }
+
         }
     }
 
