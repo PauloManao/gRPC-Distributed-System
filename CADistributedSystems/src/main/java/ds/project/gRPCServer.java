@@ -1,6 +1,8 @@
 package ds.project;
 
 import ds.project.service1.Service1Grpc;
+import ds.project.service2.Service2Grpc;
+import ds.project.service2.Service2OuterClass;
 import io.grpc.Server;
 import io.grpc.ServerBuilder;
 import ds.project.service1.Service1OuterClass;
@@ -13,6 +15,8 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.InetAddress;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 
 
@@ -29,6 +33,7 @@ public class gRPCServer {
         try {
             Server server = ServerBuilder.forPort(port)
                     .addService(new Service1())
+                    .addService(new Service2())
                     .build()
                     .start();
             System.out.println("Server started, listening on "+port);
@@ -170,6 +175,96 @@ public class gRPCServer {
                 responseObserver.onCompleted();
             }
 
+        }
+    }
+
+    private static class Service2 extends Service2Grpc.Service2ImplBase{
+        @Override
+        public void getTariffs(Service2OuterClass.tariffsRequest request, StreamObserver<Service2OuterClass.Tariffs> responseObserver) {
+            Service2OuterClass.tariffsRequest.Country country = request.getCountry();
+            Service2OuterClass.tariffsRequest.Service service = request.getService();
+
+            Map<String, String> tariffsMap = getTariffsFromMap(country, service);
+
+            try {
+                for (Map.Entry<String, String> entry: tariffsMap.entrySet()){
+                    String tariffKey = entry.getKey();
+                    String tariffValue = entry.getValue();
+
+                    Service2OuterClass.Tariffs response = Service2OuterClass.Tariffs.newBuilder()
+                            .setTariffs(tariffKey+tariffValue)
+                            .build();
+                    responseObserver.onNext(response);
+                }
+            }
+
+            finally {
+                responseObserver.onCompleted();
+            }
+
+        }
+
+        private Map<String, String> getTariffsFromMap(Service2OuterClass.tariffsRequest.Country country, Service2OuterClass.tariffsRequest.Service service){
+            Map<String, String> tariffsMap =new HashMap<>();
+
+            if (country == Service2OuterClass.tariffsRequest.Country.Ireland && service == Service2OuterClass.tariffsRequest.Service.Electricity){
+                tariffsMap.put("Bord Gais Energy: ", "44.51c /kWh");
+                tariffsMap.put("Community Power: ", "48.70c /kWh");
+                tariffsMap.put("Ecopower: ", "50.78c /kWh");
+                tariffsMap.put("Energia: ", "49.45c /kWh");
+            }
+            else if (country == Service2OuterClass.tariffsRequest.Country.Ireland && service == Service2OuterClass.tariffsRequest.Service.Gas){
+                tariffsMap.put("Flogas: ", "€ 1.63/litre");
+                tariffsMap.put("GlowGas: ", "€ 1.90/litre");
+                tariffsMap.put("Eco Gas: ", "€ 1.85/litre");
+                tariffsMap.put("Bord Gais Energy: ", "2.00/litre");
+            }
+
+            else if (country == Service2OuterClass.tariffsRequest.Country.Germany && service == Service2OuterClass.tariffsRequest.Service.Electricity){
+                tariffsMap.put("Ostrom: ", "45.51c /kWh");
+                tariffsMap.put("Vattenfall: ", "48.75c /kWh");
+                tariffsMap.put("NaturStrom: ", "46.80c /kWh");
+                tariffsMap.put("Yello: ", "41.99c /kWh");
+            }
+
+            else if (country == Service2OuterClass.tariffsRequest.Country.Germany && service == Service2OuterClass.tariffsRequest.Service.Gas){
+                tariffsMap.put("Entega: ", "€ 1.83/litre");
+                tariffsMap.put("Badenova: ", "€ 1.70/litre");
+                tariffsMap.put("German Gas: ", "€ 1.55/litre");
+                tariffsMap.put("Green Gas: ", "2.10/litre");
+            }
+            else if (country == Service2OuterClass.tariffsRequest.Country.France && service == Service2OuterClass.tariffsRequest.Service.Electricity){
+                tariffsMap.put("Alterna: ", "39.51c /kWh");
+                tariffsMap.put("Cdiscount Energie: ", "41.75c /kWh");
+                tariffsMap.put("EDF: ", "41.80c /kWh");
+                tariffsMap.put("Engie: ", "44.99c /kWh");
+            }
+
+            else if (country == Service2OuterClass.tariffsRequest.Country.France && service == Service2OuterClass.tariffsRequest.Service.Gas){
+                tariffsMap.put("Planète Oui: ", "€ 1.93/litre");
+                tariffsMap.put("Total Energie: ", "€ 1.80/litre");
+                tariffsMap.put("TotalEnergies: ", "€ 1.85/litre");
+                tariffsMap.put("France Gas: ", "€ 2.00/litre");
+            }
+
+            else if (country == Service2OuterClass.tariffsRequest.Country.Switzerland && service == Service2OuterClass.tariffsRequest.Service.Electricity){
+                tariffsMap.put("Aargau: ", "38.51c /kWh");
+                tariffsMap.put("Appenzell: ", "42.75c /kWh");
+                tariffsMap.put("Basel Land: ", "43.80c /kWh");
+                tariffsMap.put("Basel Stadt : ", "44.00c /kWh");
+            }
+
+            else if (country == Service2OuterClass.tariffsRequest.Country.Switzerland && service == Service2OuterClass.tariffsRequest.Service.Gas){
+                tariffsMap.put("Bern : ", "CHF 1.93/litre");
+                tariffsMap.put("Freiburg: ", "CHF 1.80/litre");
+                tariffsMap.put("Genève: ", "CHF 1.85/litre");
+                tariffsMap.put("Glarus: ", "CHF 2.00/litre");
+            }
+
+            else{
+                tariffsMap.put("Supplier default", "$ 100.00");
+            }
+            return tariffsMap;
         }
     }
 

@@ -1,12 +1,19 @@
 package ds.project;
 
+
 import ds.project.service1.Service1Grpc;
 import ds.project.service1.Service1OuterClass;
+import ds.project.service2.Service2Grpc;
+import ds.project.service2.Service2OuterClass;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
+import io.grpc.StatusRuntimeException;
+import io.grpc.stub.StreamObserver;
 
 import java.awt.EventQueue;
-
+import javax.swing.Timer;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import javax.jmdns.JmDNS;
 import javax.jmdns.ServiceEvent;
 import javax.jmdns.ServiceInfo;
@@ -20,11 +27,15 @@ import java.awt.event.ActionEvent;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.Iterator;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class GUIApp extends JFrame {
 
 	private static Service1Grpc.Service1BlockingStub blockingStub;
-	private static Service1Grpc.Service1BlockingStub asyncStub;
+	private static Service2Grpc.Service2Stub asyncStubService2;
 
 	private ServiceInfo serviceInfo;
 
@@ -39,6 +50,10 @@ public class GUIApp extends JFrame {
 	private JTextField tFPowerConsumed;
 	private JTextField tFCostElectricity;
 	private JTextArea txtResponseEnergyCost;
+	private JTextArea Service2textArea;
+	private ScheduledExecutorService scheduler;
+
+
 
 
 
@@ -74,7 +89,7 @@ public class GUIApp extends JFrame {
 				.build();
 
 		blockingStub = Service1Grpc.newBlockingStub(channel);
-		//asyncStub = Service1Grpc.newStub(channel);
+		asyncStubService2 = Service2Grpc.newStub(channel);
 
 		//frame = new JFrame();
 		this.setTitle("Greener App");
@@ -134,17 +149,20 @@ public class GUIApp extends JFrame {
 
 
 	private void initialize(){
+		scheduler = Executors.newSingleThreadScheduledExecutor();
 
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
+		
+		//SERVICE 1 - UNARY
 
-		JLabel lblNewLabel = new JLabel("Service 1 (Unary)");
-		lblNewLabel.setFont(new Font("Verdana", Font.BOLD, 14));
-		lblNewLabel.setBounds(196, 3, 218, 21);
-		contentPane.add(lblNewLabel);
+		JLabel Service1Label = new JLabel("Service 1 (Unary)");
+		Service1Label.setFont(new Font("Verdana", Font.BOLD, 14));
+		Service1Label.setBounds(196, 3, 218, 21);
+		contentPane.add(Service1Label);
 
 		JLabel lblNewLabel_1 = new JLabel("1. Room Heat Calculator. Dimensions (meters)");
 		lblNewLabel_1.setBounds(10, 34, 306, 13);
@@ -206,7 +224,7 @@ public class GUIApp extends JFrame {
 					System.out.println("BTU: "+ response.getBTU()+" or kW: "+response.getKW());
 				}
 				catch (NumberFormatException ex){
-					textResponse.append("Fill in all fields with numbers only!\n");
+					textResponse.append("Error: Fill in all fields with numbers only!\n");
 				}
 
 			}
@@ -277,7 +295,7 @@ public class GUIApp extends JFrame {
 							" Cost per Month: "+response.getMonthCost()+" Cost per Year: "+response.getAnnualCost());
 				}
 				catch (NumberFormatException ex){
-					txtResponseEnergyCost.append("Filly in all fields wit numbers only ! \n");
+					txtResponseEnergyCost.append("Error: Fill in all fields with numbers only ! \n");
 				}
 			}
 		});
@@ -295,5 +313,113 @@ public class GUIApp extends JFrame {
 		scrollPaneCostElec.setBounds(135, 207, 441, 58);
 
 		contentPane.add(scrollPaneCostElec);
+		
+		
+		//SERVICE 2 - CLIENT STREAMING
+		
+		JLabel Servcice2Label = new JLabel("Service 2 (Server Streaming)");
+		Servcice2Label.setFont(new Font("Verdana", Font.BOLD, 14));
+		Servcice2Label.setBounds(145, 275, 339, 21);
+		contentPane.add(Servcice2Label);
+		
+		JLabel countryLabel = new JLabel("Country");
+		countryLabel.setBounds(10, 306, 82, 13);
+		contentPane.add(countryLabel);
+		
+		JComboBox CountryComboBox = new JComboBox();
+		CountryComboBox.setBounds(85, 302, 201, 21);
+		CountryComboBox.setModel(new DefaultComboBoxModel(new String[]{"Ireland", "Germany", "France", "Switzerland"}));
+		contentPane.add(CountryComboBox);
+		
+		JLabel ServLabel = new JLabel("Service");
+		ServLabel.setBounds(303, 306, 45, 13);
+		contentPane.add(ServLabel);
+		
+		JComboBox ServComboBox = new JComboBox();
+		ServComboBox.setBounds(358, 302, 218, 21);
+		ServComboBox.setModel(new DefaultComboBoxModel(new  String[]{"Gas","Electricity"}));
+		contentPane.add(ServComboBox);
+		
+		JButton ReqServ2Button = new JButton("Request");
+		ReqServ2Button.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				int countryIndex = CountryComboBox.getSelectedIndex();
+				int serviceIndex = ServComboBox.getSelectedIndex();
+
+				Service2OuterClass.tariffsRequest.Country country = Service2OuterClass.tariffsRequest.Country.forNumber(countryIndex);
+				Service2OuterClass.tariffsRequest.Service service = Service2OuterClass.tariffsRequest.Service.forNumber(serviceIndex);
+
+				Service2OuterClass.tariffsRequest req = Service2OuterClass.tariffsRequest.newBuilder()
+						.setCountry(country)
+						.setService(service)
+						.build();
+
+				String countryName = CountryComboBox.getSelectedItem().toString();
+				String serviceName = ServComboBox.getSelectedItem().toString();
+
+				asyncStubService2.getTariffs(req, new StreamObserver<Service2OuterClass.Tariffs>() {
+					private boolean isFirstTariff = true;
+
+					@Override
+					public void onNext(Service2OuterClass.Tariffs tariffs) {
+						if (isFirstTariff){
+							SwingUtilities.invokeLater(()->{
+								Service2textArea.append("COUNTRY: "+countryName+", SERVICE: "+serviceName+"\n");
+								Service2textArea.append(tariffs.getTariffs()+"\n");
+							});
+							isFirstTariff = false;
+						}
+						else {
+							SwingUtilities.invokeLater(()->{
+								Service2textArea.append(tariffs.getTariffs()+"\n");
+							});
+						}
+					}
+
+					@Override
+					public void onError(Throwable t) {
+						t.printStackTrace();
+					}
+
+					@Override
+					public void onCompleted() {
+						//I CAN ADD ANY CLEAN UP HERE IF NEEDED
+					}
+				});
+
+//				try {
+//					Iterator<Service2OuterClass.Tariffs> response= blockingStubService2.getTariffs(req);
+//					while (response.hasNext()){
+//						Service2OuterClass.Tariffs temp = response.next();
+//						System.out.println(temp.getTariffs());
+//						Service2textArea.append(temp.getTariffs()+"\n");
+//						Thread.sleep(1000);
+//					}
+//
+//
+//				}
+//				catch (StatusRuntimeException ex){
+//					ex.printStackTrace();
+//				}
+//				catch (InterruptedException ex){
+//					throw new RuntimeException(ex);
+//				}
+			}
+		});
+		ReqServ2Button.setBounds(10, 344, 100, 21);
+		contentPane.add(ReqServ2Button);
+
+		Service2textArea = new JTextArea();
+		Service2textArea.setBounds(120, 329, 456, 55);
+		Service2textArea.setColumns(20);
+		Service2textArea.setWrapStyleWord(true);
+		Service2textArea.setRows(3);
+		contentPane.add(Service2textArea);
+
+		JScrollPane scrollPaneService2 = new JScrollPane(Service2textArea);
+		scrollPaneService2.setBounds(120,329,456,55);
+
+		contentPane.add(scrollPaneService2);
+
 	}
 }

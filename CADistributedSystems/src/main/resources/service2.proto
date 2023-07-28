@@ -1,0 +1,29 @@
+syntax = "proto3";
+option java_package = "ds.project.service2";
+
+message tariffsRequest {
+
+  enum Country{
+    Ireland =0;
+    Germany =1;
+    France=2;
+    Switzerland=3;
+  }
+
+  Country country = 1;
+
+  enum Service{
+    Gas =0;
+    Electricity=1;
+  }
+
+  Service service = 2;
+}
+
+message Tariffs{
+  string tariffs = 1;
+}
+
+service Service2{
+  rpc getTariffs(tariffsRequest) returns (stream Tariffs);
+}
