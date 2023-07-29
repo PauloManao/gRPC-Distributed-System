@@ -8,9 +8,7 @@ import ds.project.service3.Service3OuterClass;
 import io.grpc.Server;
 import io.grpc.ServerBuilder;
 import ds.project.service1.Service1OuterClass;
-import io.grpc.Status;
 import io.grpc.stub.StreamObserver;
-
 import javax.jmdns.JmDNS;
 import javax.jmdns.ServiceInfo;
 import java.io.FileInputStream;
@@ -19,7 +17,6 @@ import java.io.InputStream;
 import java.net.InetAddress;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.DateTimeException;
 import java.util.*;
 
 
@@ -290,12 +287,23 @@ public class gRPCServer {
                 @Override
                 public void onNext(Service3OuterClass.scheduleRequest dateTimePair) {
                     SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+                    Date date = new Date();
                     try {
                         Date startDate = dateFormat.parse(dateTimePair.getStartDate());
                         Date endDate = dateFormat.parse(dateTimePair.getEndDate());
 
                         if (startDate.after(endDate)||startDate.equals(endDate)){
-                            String errorMessage = "Error: Start Date should be before the End Date";
+                            String errorMessage = "Error: Start Date/Time should be before the End Date/Time";
+                            Service3OuterClass.Schedule response = Service3OuterClass.Schedule.newBuilder()
+                                    .setError(errorMessage)
+                                    .build();
+                            responseObserver.onNext(response);
+                            responseObserver.onCompleted();
+                            return;
+                        }
+
+                        else if (startDate.before(date) || endDate.before(date)){
+                            String errorMessage = "Error: Not allowed to enter past date/times";
                             Service3OuterClass.Schedule response = Service3OuterClass.Schedule.newBuilder()
                                     .setError(errorMessage)
                                     .build();
@@ -320,10 +328,9 @@ public class gRPCServer {
 
                             updatedTimes.add(scheduleRequest);
 
-
                     }
                     catch (ParseException e) {
-                        String errorMessage = "Error: Start Date should be before the End Date";
+                        String errorMessage = "Error: Invalid date/time format. Use the format: dd/MM/yyyy HH:mm";
                         Service3OuterClass.Schedule response = Service3OuterClass.Schedule.newBuilder()
                                 .setError(errorMessage)
                                 .build();

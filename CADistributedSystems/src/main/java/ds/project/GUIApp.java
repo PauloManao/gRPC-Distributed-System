@@ -9,11 +9,8 @@ import ds.project.service3.Service3Grpc;
 import ds.project.service3.Service3OuterClass;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
-import io.grpc.StatusRuntimeException;
 import io.grpc.stub.StreamObserver;
-
 import java.awt.EventQueue;
-import javax.swing.Timer;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.jmdns.JmDNS;
@@ -22,20 +19,15 @@ import javax.jmdns.ServiceInfo;
 import javax.jmdns.ServiceListener;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
-import java.awt.FlowLayout;
 import java.awt.Font;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 public class GUIApp extends JFrame {
 
@@ -44,8 +36,6 @@ public class GUIApp extends JFrame {
 	private static Service3Grpc.Service3Stub asyncStubService3;
 
 	private ServiceInfo serviceInfo;
-
-	private JFrame frame;
 
 	private JPanel contentPane;
 	private JTextField tFWidth;
@@ -276,6 +266,7 @@ public class GUIApp extends JFrame {
 		contentPane.add(lblNewLabel_7);
 		
 		tFCostElectricity = new JTextField();
+		tFCostElectricity.setHorizontalAlignment(SwingConstants.CENTER);
 		tFCostElectricity.setBounds(519, 152, 57, 19);
 		contentPane.add(tFCostElectricity);
 		tFCostElectricity.setColumns(10);
@@ -309,7 +300,7 @@ public class GUIApp extends JFrame {
 				}
 			}
 		});
-		BTNcalculateEnergyCost.setBounds(10, 178, 118, 48);
+		BTNcalculateEnergyCost.setBounds(7, 178, 121, 48);
 		contentPane.add(BTNcalculateEnergyCost);
 		
 		txtResponseEnergyCost = new JTextArea();
@@ -399,7 +390,7 @@ public class GUIApp extends JFrame {
 
 			}
 		});
-		ReqServ2Button.setBounds(10, 289, 118, 71);
+		ReqServ2Button.setBounds(7, 289, 121, 71);
 		contentPane.add(ReqServ2Button);
 
 		Service2textArea = new JTextArea();
@@ -431,7 +422,7 @@ public class GUIApp extends JFrame {
 		EndDateLabel.setBounds(10, 420, 96, 13);
 		contentPane.add(EndDateLabel);
 		
-		JButton addDatesButton = new JButton("Add");
+		JButton addDatesButton = new JButton("Add >>>");
 		addDatesButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String startDate = StartFormattedTextField.getText();
@@ -442,15 +433,18 @@ public class GUIApp extends JFrame {
 						.setEndDate(endDate)
 						.build();
 				dateTimesList.add(dateTimePair);
+
+
 			}
 		});
-		addDatesButton.setBounds(7, 442, 76, 21);
+		addDatesButton.setBounds(7, 442, 103, 21);
 		contentPane.add(addDatesButton);
 		
 		JButton listBtnNewButton = new JButton("List");
 		listBtnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				StreamObserver<Service3OuterClass.Schedule> responseObserver = new StreamObserver<Service3OuterClass.Schedule>() {
+					private boolean hasError = false;
 					@Override
 					public void onNext(Service3OuterClass.Schedule schedule) {
 						List<Service3OuterClass.scheduleRequest> updateTimes = schedule.getUpdatedScheduleRequestList();
@@ -461,8 +455,18 @@ public class GUIApp extends JFrame {
 							String endDate = dateTimePair.getEndDate();
 							responseBuilder.append("Start Date: ").append(startDate).append(", End Date: ").append(endDate+"\n");
 						}
+						if(!schedule.getError().isEmpty()){
+							hasError = true;
+							responseBuilder.append(schedule.getError()).append("\n");
+						}
 						SwingUtilities.invokeLater(()->{
-							responseDateTimesTextArea.setText(responseBuilder.toString());
+							if (hasError) {
+								responseDateTimesTextArea.setText(responseBuilder.toString());
+								hasError = false;
+							}
+							else {
+								responseDateTimesTextArea.append(responseBuilder.toString());
+							}
 						});
 					}
 
@@ -473,7 +477,7 @@ public class GUIApp extends JFrame {
 
 					@Override
 					public void onCompleted() {
-						// You can perform any cleanup or final operations
+						dateTimesList.clear();
 					}
 				};
 				StreamObserver<Service3OuterClass.scheduleRequest> requestStreamObserver = asyncStubService3.getSchedule(responseObserver);
@@ -483,17 +487,17 @@ public class GUIApp extends JFrame {
 				requestStreamObserver.onCompleted();
 			}
 		});
-		listBtnNewButton.setBounds(249, 386, 52, 71);
+		listBtnNewButton.setBounds(244, 386, 57, 71);
 		contentPane.add(listBtnNewButton);
 		
 		SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 		
 		StartFormattedTextField = new JFormattedTextField(dateFormat);
-		StartFormattedTextField.setBounds(85, 385, 158, 21);
+		StartFormattedTextField.setBounds(108, 385, 126, 21);
 		contentPane.add(StartFormattedTextField);
 		
 		EndFormattedTextField = new JFormattedTextField(dateFormat);
-		EndFormattedTextField.setBounds(85, 413, 158, 21);
+		EndFormattedTextField.setBounds(108, 413, 126, 21);
 		contentPane.add(EndFormattedTextField);
 		
 		responseDateTimesTextArea = new JTextArea();
