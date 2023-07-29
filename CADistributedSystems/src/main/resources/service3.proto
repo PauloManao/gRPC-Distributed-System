@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+option java_package = "ds.project.service3";
+
+message scheduleRequest {
+  string startDate = 1;
+  string endDate = 2;
+}
+
+message Schedule{
+  repeated scheduleRequest updatedScheduleRequest = 1;
+  string error = 2;
+}
+
+service Service3{
+  rpc getSchedule(stream scheduleRequest) returns (Schedule);
+}

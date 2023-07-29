@@ -3,6 +3,8 @@ package ds.project;
 import ds.project.service1.Service1Grpc;
 import ds.project.service2.Service2Grpc;
 import ds.project.service2.Service2OuterClass;
+import ds.project.service3.Service3Grpc;
+import ds.project.service3.Service3OuterClass;
 import io.grpc.Server;
 import io.grpc.ServerBuilder;
 import ds.project.service1.Service1OuterClass;
@@ -15,9 +17,10 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.InetAddress;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Properties;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.DateTimeException;
+import java.util.*;
 
 
 public class gRPCServer {
@@ -34,6 +37,7 @@ public class gRPCServer {
             Server server = ServerBuilder.forPort(port)
                     .addService(new Service1())
                     .addService(new Service2())
+                    .addService(new Service3())
                     .build()
                     .start();
             System.out.println("Server started, listening on "+port);
@@ -177,7 +181,7 @@ public class gRPCServer {
 
         }
     }
-
+    //SERVICE 2 - SERVER STREAMING
     private static class Service2 extends Service2Grpc.Service2ImplBase{
         @Override
         public void getTariffs(Service2OuterClass.tariffsRequest request, StreamObserver<Service2OuterClass.Tariffs> responseObserver) {
@@ -194,6 +198,14 @@ public class gRPCServer {
                     Service2OuterClass.Tariffs response = Service2OuterClass.Tariffs.newBuilder()
                             .setTariffs(tariffKey+tariffValue)
                             .build();
+
+                    //Await simulation between each tariff response
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+
                     responseObserver.onNext(response);
                 }
             }
@@ -265,6 +277,83 @@ public class gRPCServer {
                 tariffsMap.put("Supplier default", "$ 100.00");
             }
             return tariffsMap;
+        }
+    }
+
+    //SERVICE3 - CLIENT STREAMING
+    public static class Service3 extends Service3Grpc.Service3ImplBase{
+        @Override
+        public StreamObserver<Service3OuterClass.scheduleRequest> getSchedule(StreamObserver<Service3OuterClass.Schedule> responseObserver) {
+            return new StreamObserver<Service3OuterClass.scheduleRequest>() {
+
+                private List<Service3OuterClass.scheduleRequest> updatedTimes =new ArrayList<>();
+                @Override
+                public void onNext(Service3OuterClass.scheduleRequest dateTimePair) {
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+                    try {
+                        Date startDate = dateFormat.parse(dateTimePair.getStartDate());
+                        Date endDate = dateFormat.parse(dateTimePair.getEndDate());
+
+                        if (startDate.after(endDate)||startDate.equals(endDate)){
+                            String errorMessage = "Error: Start Date should be before the End Date";
+                            Service3OuterClass.Schedule response = Service3OuterClass.Schedule.newBuilder()
+                                    .setError(errorMessage)
+                                    .build();
+                            responseObserver.onNext(response);
+                            responseObserver.onCompleted();
+                            return;
+                        }
+
+                            Calendar calendar = Calendar.getInstance();
+                            calendar.setTime(startDate);
+                            calendar.add(Calendar.MINUTE, -30);
+                            String updatedStartDateTime = dateFormat.format(calendar.getTime());
+
+                            calendar.setTime(endDate);
+                            calendar.add(Calendar.MINUTE, -30);
+                            String updatedEndDateTime = dateFormat.format(calendar.getTime());
+
+                            Service3OuterClass.scheduleRequest scheduleRequest = Service3OuterClass.scheduleRequest.newBuilder()
+                                    .setStartDate(updatedStartDateTime)
+                                    .setEndDate(updatedEndDateTime)
+                                    .build();
+
+                            updatedTimes.add(scheduleRequest);
+
+
+                    }
+                    catch (ParseException e) {
+                        String errorMessage = "Error: Start Date should be before the End Date";
+                        Service3OuterClass.Schedule response = Service3OuterClass.Schedule.newBuilder()
+                                .setError(errorMessage)
+                                .build();
+                        responseObserver.onNext(response);
+                        responseObserver.onCompleted();
+                    }
+
+                }
+
+                @Override
+                public void onError(Throwable t) {
+                    String errorMessage = "Error: Invalid date format or Start Date should be before the End Date";
+                    Service3OuterClass.Schedule response = Service3OuterClass.Schedule.newBuilder()
+                            .setError(errorMessage)
+                            .build();
+                    responseObserver.onNext(response);
+                    responseObserver.onCompleted();
+
+                }
+
+                @Override
+                public void onCompleted() {
+                    Service3OuterClass.Schedule response = Service3OuterClass.Schedule.newBuilder()
+                            .addAllUpdatedScheduleRequest(updatedTimes)
+                            .build();
+                            responseObserver.onNext(response);
+                            responseObserver.onCompleted();
+
+                }
+            };
         }
     }
 

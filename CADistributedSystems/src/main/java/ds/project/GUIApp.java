@@ -5,6 +5,8 @@ import ds.project.service1.Service1Grpc;
 import ds.project.service1.Service1OuterClass;
 import ds.project.service2.Service2Grpc;
 import ds.project.service2.Service2OuterClass;
+import ds.project.service3.Service3Grpc;
+import ds.project.service3.Service3OuterClass;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import io.grpc.StatusRuntimeException;
@@ -27,7 +29,10 @@ import java.awt.event.ActionEvent;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -36,6 +41,7 @@ public class GUIApp extends JFrame {
 
 	private static Service1Grpc.Service1BlockingStub blockingStub;
 	private static Service2Grpc.Service2Stub asyncStubService2;
+	private static Service3Grpc.Service3Stub asyncStubService3;
 
 	private ServiceInfo serviceInfo;
 
@@ -51,9 +57,11 @@ public class GUIApp extends JFrame {
 	private JTextField tFCostElectricity;
 	private JTextArea txtResponseEnergyCost;
 	private JTextArea Service2textArea;
+	private JTextArea responseDateTimesTextArea;
 	private ScheduledExecutorService scheduler;
-
-
+	private List<Service3OuterClass.scheduleRequest> dateTimesList = new ArrayList<>();
+	private JFormattedTextField StartFormattedTextField;
+	private JFormattedTextField EndFormattedTextField;
 
 
 
@@ -90,6 +98,7 @@ public class GUIApp extends JFrame {
 
 		blockingStub = Service1Grpc.newBlockingStub(channel);
 		asyncStubService2 = Service2Grpc.newStub(channel);
+		asyncStubService3 = Service3Grpc.newStub(channel);
 
 		//frame = new JFrame();
 		this.setTitle("Greener App");
@@ -247,26 +256,27 @@ public class GUIApp extends JFrame {
 		
 		//Service 1 Part 2 - Cost of Energy
 		
+		
 		JLabel lblNewLabel_5 = new JLabel("2. Energy Cost Calculator");
 		lblNewLabel_5.setBounds(10, 132, 252, 13);
 		contentPane.add(lblNewLabel_5);
 		
-		JLabel lblNewLabel_6 = new JLabel("Average Power Consumed per day (kW)");
-		lblNewLabel_6.setBounds(10, 155, 261, 13);
+		JLabel lblNewLabel_6 = new JLabel("Average Power Consumed/day (kW)");
+		lblNewLabel_6.setBounds(10, 155, 218, 13);
 		contentPane.add(lblNewLabel_6);
 		
 		tFPowerConsumed = new JTextField();
 		tFPowerConsumed.setHorizontalAlignment(SwingConstants.CENTER);
-		tFPowerConsumed.setBounds(281, 152, 67, 19);
+		tFPowerConsumed.setBounds(229, 152, 57, 19);
 		contentPane.add(tFPowerConsumed);
 		tFPowerConsumed.setColumns(10);
 		
-		JLabel lblNewLabel_7 = new JLabel("Cost of Electricity (cents per kW)");
-		lblNewLabel_7.setBounds(10, 178, 261, 13);
+		JLabel lblNewLabel_7 = new JLabel("Cost of Electricity (cents/kW)");
+		lblNewLabel_7.setBounds(336, 155, 180, 13);
 		contentPane.add(lblNewLabel_7);
 		
 		tFCostElectricity = new JTextField();
-		tFCostElectricity.setBounds(281, 175, 67, 19);
+		tFCostElectricity.setBounds(519, 152, 57, 19);
 		contentPane.add(tFCostElectricity);
 		tFCostElectricity.setColumns(10);
 		
@@ -299,44 +309,44 @@ public class GUIApp extends JFrame {
 				}
 			}
 		});
-		BTNcalculateEnergyCost.setBounds(7, 206, 118, 60);
+		BTNcalculateEnergyCost.setBounds(10, 178, 118, 48);
 		contentPane.add(BTNcalculateEnergyCost);
 		
 		txtResponseEnergyCost = new JTextArea();
 		txtResponseEnergyCost.setColumns(20);
 		txtResponseEnergyCost.setWrapStyleWord(true);
 		txtResponseEnergyCost.setRows(3);
-		txtResponseEnergyCost.setBounds(135, 207, 441, 58);
+		txtResponseEnergyCost.setBounds(135, 179, 441, 48);
 		contentPane.add(txtResponseEnergyCost);
 		
 		JScrollPane scrollPaneCostElec = new JScrollPane(txtResponseEnergyCost);
-		scrollPaneCostElec.setBounds(135, 207, 441, 58);
+		scrollPaneCostElec.setBounds(135, 179, 441, 48);
 
 		contentPane.add(scrollPaneCostElec);
 		
 		
-		//SERVICE 2 - CLIENT STREAMING
+		//SERVICE 2 - SERVER STREAMING
 		
 		JLabel Servcice2Label = new JLabel("Service 2 (Server Streaming)");
 		Servcice2Label.setFont(new Font("Verdana", Font.BOLD, 14));
-		Servcice2Label.setBounds(145, 275, 339, 21);
+		Servcice2Label.setBounds(156, 237, 339, 21);
 		contentPane.add(Servcice2Label);
 		
 		JLabel countryLabel = new JLabel("Country");
-		countryLabel.setBounds(10, 306, 82, 13);
+		countryLabel.setBounds(10, 266, 82, 13);
 		contentPane.add(countryLabel);
 		
 		JComboBox CountryComboBox = new JComboBox();
-		CountryComboBox.setBounds(85, 302, 201, 21);
+		CountryComboBox.setBounds(85, 262, 201, 21);
 		CountryComboBox.setModel(new DefaultComboBoxModel(new String[]{"Ireland", "Germany", "France", "Switzerland"}));
 		contentPane.add(CountryComboBox);
 		
 		JLabel ServLabel = new JLabel("Service");
-		ServLabel.setBounds(303, 306, 45, 13);
+		ServLabel.setBounds(303, 266, 45, 13);
 		contentPane.add(ServLabel);
 		
 		JComboBox ServComboBox = new JComboBox();
-		ServComboBox.setBounds(358, 302, 218, 21);
+		ServComboBox.setBounds(358, 262, 218, 21);
 		ServComboBox.setModel(new DefaultComboBoxModel(new  String[]{"Gas","Electricity"}));
 		contentPane.add(ServComboBox);
 		
@@ -387,39 +397,115 @@ public class GUIApp extends JFrame {
 					}
 				});
 
-//				try {
-//					Iterator<Service2OuterClass.Tariffs> response= blockingStubService2.getTariffs(req);
-//					while (response.hasNext()){
-//						Service2OuterClass.Tariffs temp = response.next();
-//						System.out.println(temp.getTariffs());
-//						Service2textArea.append(temp.getTariffs()+"\n");
-//						Thread.sleep(1000);
-//					}
-//
-//
-//				}
-//				catch (StatusRuntimeException ex){
-//					ex.printStackTrace();
-//				}
-//				catch (InterruptedException ex){
-//					throw new RuntimeException(ex);
-//				}
 			}
 		});
-		ReqServ2Button.setBounds(10, 344, 100, 21);
+		ReqServ2Button.setBounds(10, 289, 118, 71);
 		contentPane.add(ReqServ2Button);
 
 		Service2textArea = new JTextArea();
-		Service2textArea.setBounds(120, 329, 456, 55);
+		Service2textArea.setBounds(135, 290, 441, 70);
 		Service2textArea.setColumns(20);
 		Service2textArea.setWrapStyleWord(true);
 		Service2textArea.setRows(3);
 		contentPane.add(Service2textArea);
 
 		JScrollPane scrollPaneService2 = new JScrollPane(Service2textArea);
-		scrollPaneService2.setBounds(120,329,456,55);
+		scrollPaneService2.setBounds(135,290,441,70);
 
 		contentPane.add(scrollPaneService2);
+		
+		
+		//SERVICE 3 - CLIENT STREAMING
+
+		
+		JLabel Service3Label = new JLabel("Service 3 (Client Streaming)");
+		Service3Label.setFont(new Font("Verdana", Font.BOLD, 14));
+		Service3Label.setBounds(156, 364, 339, 21);
+		contentPane.add(Service3Label);
+		
+		JLabel StartDateLabel = new JLabel("Start Date/Time");
+		StartDateLabel.setBounds(10, 390, 100, 13);
+		contentPane.add(StartDateLabel);
+		
+		JLabel EndDateLabel = new JLabel("End Date/Time");
+		EndDateLabel.setBounds(10, 420, 96, 13);
+		contentPane.add(EndDateLabel);
+		
+		JButton addDatesButton = new JButton("Add");
+		addDatesButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String startDate = StartFormattedTextField.getText();
+				String endDate = EndFormattedTextField.getText();
+
+				Service3OuterClass.scheduleRequest dateTimePair = Service3OuterClass.scheduleRequest.newBuilder()
+						.setStartDate(startDate)
+						.setEndDate(endDate)
+						.build();
+				dateTimesList.add(dateTimePair);
+			}
+		});
+		addDatesButton.setBounds(7, 442, 76, 21);
+		contentPane.add(addDatesButton);
+		
+		JButton listBtnNewButton = new JButton("List");
+		listBtnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				StreamObserver<Service3OuterClass.Schedule> responseObserver = new StreamObserver<Service3OuterClass.Schedule>() {
+					@Override
+					public void onNext(Service3OuterClass.Schedule schedule) {
+						List<Service3OuterClass.scheduleRequest> updateTimes = schedule.getUpdatedScheduleRequestList();
+						StringBuilder responseBuilder = new StringBuilder();
+
+						for (Service3OuterClass.scheduleRequest dateTimePair:updateTimes){
+							String startDate = dateTimePair.getStartDate();
+							String endDate = dateTimePair.getEndDate();
+							responseBuilder.append("Start Date: ").append(startDate).append(", End Date: ").append(endDate+"\n");
+						}
+						SwingUtilities.invokeLater(()->{
+							responseDateTimesTextArea.setText(responseBuilder.toString());
+						});
+					}
+
+					@Override
+					public void onError(Throwable t) {
+						t.printStackTrace();
+					}
+
+					@Override
+					public void onCompleted() {
+						// You can perform any cleanup or final operations
+					}
+				};
+				StreamObserver<Service3OuterClass.scheduleRequest> requestStreamObserver = asyncStubService3.getSchedule(responseObserver);
+				for (Service3OuterClass.scheduleRequest dateTimePair:dateTimesList){
+					requestStreamObserver.onNext(dateTimePair);
+				}
+				requestStreamObserver.onCompleted();
+			}
+		});
+		listBtnNewButton.setBounds(249, 386, 52, 71);
+		contentPane.add(listBtnNewButton);
+		
+		SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+		
+		StartFormattedTextField = new JFormattedTextField(dateFormat);
+		StartFormattedTextField.setBounds(85, 385, 158, 21);
+		contentPane.add(StartFormattedTextField);
+		
+		EndFormattedTextField = new JFormattedTextField(dateFormat);
+		EndFormattedTextField.setBounds(85, 413, 158, 21);
+		contentPane.add(EndFormattedTextField);
+		
+		responseDateTimesTextArea = new JTextArea();
+		responseDateTimesTextArea.setColumns(20);
+		responseDateTimesTextArea.setBounds(303, 386, 273, 71);
+		responseDateTimesTextArea.setWrapStyleWord(true);
+		responseDateTimesTextArea.setRows(3);
+		contentPane.add(responseDateTimesTextArea);
+
+		JScrollPane scrollPaneService3 = new JScrollPane(responseDateTimesTextArea);
+		scrollPaneService3.setBounds(303,386,273,71);
+		contentPane.add(scrollPaneService3);
 
 	}
 }
