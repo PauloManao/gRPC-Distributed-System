@@ -5,6 +5,8 @@ import ds.project.service2.Service2Grpc;
 import ds.project.service2.Service2OuterClass;
 import ds.project.service3.Service3Grpc;
 import ds.project.service3.Service3OuterClass;
+import ds.project.service4.Service4Grpc;
+import ds.project.service4.Service4OuterClass;
 import io.grpc.Server;
 import io.grpc.ServerBuilder;
 import ds.project.service1.Service1OuterClass;
@@ -18,6 +20,7 @@ import java.net.InetAddress;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+
 
 
 public class gRPCServer {
@@ -35,6 +38,7 @@ public class gRPCServer {
                     .addService(new Service1())
                     .addService(new Service2())
                     .addService(new Service3())
+                    .addService(new Service4())
                     .build()
                     .start();
             System.out.println("Server started, listening on "+port);
@@ -364,5 +368,115 @@ public class gRPCServer {
         }
     }
 
+    //SERVICE 4 BI-DIRECTIONAL
 
+    public static class Service4 extends Service4Grpc.Service4ImplBase{
+        private Map<Integer,Map<Integer,Double>> consumptionMap = new HashMap<>();
+        private double totalConsumption= 0.0;
+        private Set<Integer> requestedYearMonthSet =  new HashSet<>();
+
+        public Service4(){
+            consumptionMap = new HashMap<>();
+            consumptionDataMap();
+        }
+
+
+        @Override
+        public StreamObserver<Service4OuterClass.consumptionRequest> getConsumption(StreamObserver<Service4OuterClass.Consumption> responseObserver) {
+            return new StreamObserver<Service4OuterClass.consumptionRequest>() {
+                @Override
+                public void onNext(Service4OuterClass.consumptionRequest consumptionRequest) {
+                    int yearInput =consumptionRequest.getYearValue();
+                    int monthInput = consumptionRequest.getMonthValue();
+
+                    if (requestedYearMonthSet.contains(yearInput*10+monthInput)){
+                        String errorMessage = "Year/month combination already requested. ";
+                        Service4OuterClass.Consumption consumptionResponse =Service4OuterClass.Consumption.newBuilder()
+                                .setTotal(String.valueOf(totalConsumption))
+                                .setError(errorMessage)
+                                .build();
+                        responseObserver.onNext(consumptionResponse);
+                        return;
+                    }
+
+
+                    double consumptionValue =getConsumption(yearInput, monthInput);
+
+                    totalConsumption+=consumptionValue;
+                    requestedYearMonthSet.add(yearInput*10+monthInput);
+
+                    Service4OuterClass.Consumption consumptionResponse = Service4OuterClass.Consumption.newBuilder()
+                            .setConsumption(String.valueOf(consumptionValue))
+                            .setTotal(String.valueOf(totalConsumption))
+                            .build();
+
+                    responseObserver.onNext(consumptionResponse);
+
+
+
+                }
+
+                @Override
+                public void onError(Throwable t) {
+
+                }
+
+                @Override
+                public void onCompleted() {
+                    responseObserver.onCompleted();
+                    totalConsumption = 0.0;
+                    requestedYearMonthSet.clear();
+                }
+
+                private double getConsumption (int yearInput, int monthInput){
+                    Service4OuterClass.consumptionRequest.Year yearEnum = Service4OuterClass.consumptionRequest.Year.forNumber(yearInput);
+                    Service4OuterClass.consumptionRequest.Month monthEnum= Service4OuterClass.consumptionRequest.Month.forNumber(monthInput);
+
+                    int yearValue =2022+yearEnum.getNumber();
+                    int monthValue = monthEnum.getNumber();
+
+                    Map<Integer, Double> yearData =consumptionMap.get(yearValue);
+                        if (yearData!=null){
+                            Double consumptionValue = yearData.get(monthValue);
+                            if (consumptionValue!=null){
+                                return consumptionValue;
+                            }
+                        }
+                        return 0.0;
+                }
+            };
+        }
+        private void consumptionDataMap(){
+            Map<Integer, Double> consumption2022 =new HashMap<>();
+            consumption2022.put(0,300.00);
+            consumption2022.put(1,300.99);
+            consumption2022.put(2,310.20);
+            consumption2022.put(3,299.50);
+            consumption2022.put(4,310.30);
+            consumption2022.put(5,305.70);
+            consumption2022.put(6,450.90);
+            consumption2022.put(7,500.80);
+            consumption2022.put(8,750.40);
+            consumption2022.put(9,600.57);
+            consumption2022.put(10,623.30);
+            consumption2022.put(11,657.15);
+            consumptionMap.put(2022, consumption2022);
+
+            Map<Integer, Double> consumption2023 = new HashMap<>();
+            consumption2023.put(0, 450.00);
+            consumption2023.put(1, 460.10);
+            consumption2023.put(2, 457.30);
+            consumption2023.put(3, 462.25);
+            consumption2023.put(4, 463.18);
+            consumption2023.put(5, 475.20);
+            consumption2023.put(6, 485.10);
+            consumption2023.put(7, 560.00);
+            consumption2023.put(8, 580.00);
+            consumption2023.put(9, 590.00);
+            consumption2023.put(10, 600.00);
+            consumption2023.put(11, 700.20);
+            consumptionMap.put(2023, consumption2023);
+
+        }
+    }
 }

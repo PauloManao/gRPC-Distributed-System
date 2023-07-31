@@ -1,0 +1,39 @@
+syntax = "proto3";
+
+option java_package = "ds.project.service4";
+
+message consumptionRequest{
+
+  enum Year{
+    Y_2022 = 0;
+    Y_2023 = 1;
+  }
+  Year year = 1;
+
+  enum Month{
+    JAN = 0;
+    FEB = 1;
+    MAR = 2;
+    APR = 3;
+    MAY = 4;
+    JUN = 5;
+    JUL = 6;
+    AUG = 7;
+    SEP = 8;
+    OCT = 9;
+    NOV = 10;
+    DEC = 11;
+  }
+
+  Month month = 2;
+}
+
+message Consumption{
+  string consumption = 1;
+  string total = 2;
+  string error = 3;
+}
+
+service Service4{
+  rpc getConsumption(stream consumptionRequest) returns ( stream Consumption);
+}

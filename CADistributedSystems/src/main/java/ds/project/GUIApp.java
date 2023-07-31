@@ -7,6 +7,8 @@ import ds.project.service2.Service2Grpc;
 import ds.project.service2.Service2OuterClass;
 import ds.project.service3.Service3Grpc;
 import ds.project.service3.Service3OuterClass;
+import ds.project.service4.Service4Grpc;
+import ds.project.service4.Service4OuterClass;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import io.grpc.stub.StreamObserver;
@@ -21,6 +23,8 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.Font;
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.text.SimpleDateFormat;
@@ -29,11 +33,14 @@ import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
+
 public class GUIApp extends JFrame {
 
 	private static Service1Grpc.Service1BlockingStub blockingStub;
 	private static Service2Grpc.Service2Stub asyncStubService2;
 	private static Service3Grpc.Service3Stub asyncStubService3;
+	private static Service4Grpc.Service4Stub asyncStubService4;
+	private StreamObserver<Service4OuterClass.consumptionRequest> requestObserver;
 
 	private ServiceInfo serviceInfo;
 
@@ -52,6 +59,8 @@ public class GUIApp extends JFrame {
 	private List<Service3OuterClass.scheduleRequest> dateTimesList = new ArrayList<>();
 	private JFormattedTextField StartFormattedTextField;
 	private JFormattedTextField EndFormattedTextField;
+	private JTextArea Service4textArea;
+	private BigDecimal totalConsumption = BigDecimal.ZERO;
 
 
 
@@ -89,11 +98,13 @@ public class GUIApp extends JFrame {
 		blockingStub = Service1Grpc.newBlockingStub(channel);
 		asyncStubService2 = Service2Grpc.newStub(channel);
 		asyncStubService3 = Service3Grpc.newStub(channel);
+		asyncStubService4 = Service4Grpc.newStub(channel);
+
 
 		//frame = new JFrame();
 		this.setTitle("Greener App");
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		this.setBounds(250, 150, 600, 500);
+		this.setBounds(250, 150, 600, 610);
 
 		this.setVisible(true);
 
@@ -160,7 +171,7 @@ public class GUIApp extends JFrame {
 
 		JLabel Service1Label = new JLabel("Service 1 (Unary)");
 		Service1Label.setFont(new Font("Verdana", Font.BOLD, 14));
-		Service1Label.setBounds(196, 3, 218, 21);
+		Service1Label.setBounds(213, 3, 232, 21);
 		contentPane.add(Service1Label);
 
 		JLabel lblNewLabel_1 = new JLabel("1. Room Heat Calculator. Dimensions (meters)");
@@ -320,7 +331,7 @@ public class GUIApp extends JFrame {
 		
 		JLabel Servcice2Label = new JLabel("Service 2 (Server Streaming)");
 		Servcice2Label.setFont(new Font("Verdana", Font.BOLD, 14));
-		Servcice2Label.setBounds(156, 237, 339, 21);
+		Servcice2Label.setBounds(179, 237, 316, 21);
 		contentPane.add(Servcice2Label);
 		
 		JLabel countryLabel = new JLabel("Country");
@@ -411,7 +422,7 @@ public class GUIApp extends JFrame {
 		
 		JLabel Service3Label = new JLabel("Service 3 (Client Streaming)");
 		Service3Label.setFont(new Font("Verdana", Font.BOLD, 14));
-		Service3Label.setBounds(156, 364, 339, 21);
+		Service3Label.setBounds(179, 364, 316, 21);
 		contentPane.add(Service3Label);
 		
 		JLabel StartDateLabel = new JLabel("Start Date/Time");
@@ -510,6 +521,88 @@ public class GUIApp extends JFrame {
 		JScrollPane scrollPaneService3 = new JScrollPane(responseDateTimesTextArea);
 		scrollPaneService3.setBounds(303,386,273,71);
 		contentPane.add(scrollPaneService3);
+		
+		//SERVICE 4 - BIDIRECTIONAL
+		
+		JLabel Service4Label = new JLabel("Service 4 (Bidirectional)");
+		Service4Label.setFont(new Font("Verdana", Font.BOLD, 14));
+		Service4Label.setBounds(184, 467, 230, 13);
+		contentPane.add(Service4Label);
+		
+		JComboBox yearComboBox = new JComboBox();
+		yearComboBox.setBounds(7, 498, 69, 21);
+		yearComboBox.setModel(new DefaultComboBoxModel(new String[]{"2022", "2023"}));
+		contentPane.add(yearComboBox);
+		
+		JComboBox monthComboBox = new JComboBox();
+		monthComboBox.setBounds(135, 498, 69, 21);
+		monthComboBox.setModel(new DefaultComboBoxModel(new String[]{"JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL","AUG", "SEP", "OCT", "NOV", "DEC"}));
+		contentPane.add(monthComboBox);
+		
+		JButton addConsumptionButton = new JButton("Add >>>");
+		addConsumptionButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				int yearIndex = yearComboBox.getSelectedIndex();
+				int monthIdex = monthComboBox.getSelectedIndex();
+
+				Service4OuterClass.consumptionRequest.Year year = Service4OuterClass.consumptionRequest.Year.forNumber(yearIndex);
+				Service4OuterClass.consumptionRequest.Month month = Service4OuterClass.consumptionRequest.Month.forNumber(monthIdex);
+
+				Service4OuterClass.consumptionRequest req = Service4OuterClass.consumptionRequest.newBuilder()
+						.setYear(year)
+						.setMonth(month)
+						.build();
+
+				StreamObserver<Service4OuterClass.Consumption> responseObserver = new StreamObserver<Service4OuterClass.Consumption>() {
+					@Override
+					public void onNext(Service4OuterClass.Consumption consumption) {
+						SwingUtilities.invokeLater(()-> {
+							if(!consumption.getError().isEmpty()){
+								Service4textArea.append("Error: "+ consumption.getError()+"\n");
+							}
+							else {
+								Service4textArea.append("Consumption for "+year+" "+month+": "+consumption.getConsumption()+"\n");
+								BigDecimal total =  new BigDecimal(consumption.getTotal());
+								String formatTotalConsumption = total.setScale(2, RoundingMode.HALF_UP).toString();
+								Service4textArea.append("Total Consumption: " +formatTotalConsumption+"\n");
+
+								totalConsumption = total;
+							}
+						});
+
+					}
+
+					@Override
+					public void onError(Throwable t) {
+						t.printStackTrace();
+
+					}
+
+					@Override
+					public void onCompleted() {
+
+					}
+
+				};
+				StreamObserver<Service4OuterClass.consumptionRequest> requestObserver = asyncStubService4.getConsumption(responseObserver);
+
+				requestObserver.onNext(req);
+
+			}
+		});
+		addConsumptionButton.setBounds(58, 532, 103, 21);
+		contentPane.add(addConsumptionButton);
+		
+		Service4textArea = new JTextArea();
+		Service4textArea.setColumns(20);
+		Service4textArea.setBounds(215, 483, 361, 80);
+		Service4textArea.setWrapStyleWord(true);
+		Service4textArea.setRows(3);
+		contentPane.add(Service4textArea);
+
+		JScrollPane scrollPaneService4 = new JScrollPane(Service4textArea);
+		scrollPaneService4.setBounds(215,483,361,80);
+		contentPane.add(scrollPaneService4);
 
 	}
 }
