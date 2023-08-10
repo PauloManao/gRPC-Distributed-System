@@ -13,9 +13,7 @@ import ds.project.service1.Service1OuterClass;
 import io.grpc.stub.StreamObserver;
 import javax.jmdns.JmDNS;
 import javax.jmdns.ServiceInfo;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.InetAddress;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -27,11 +25,13 @@ public class gRPCServer {
     public static void main(String[] args) {
         gRPCServer gRPCServer = new gRPCServer();
 
-        Properties prop =gRPCServer.getProperties();
+        int port = 6565;
+        String serviceType = "_maths._tcp.local.";
+        String serviceName = "simple_maths";
+        String serviceDescription = "service for basic math operations";
 
-        gRPCServer.registerService(prop);
+        gRPCServer.registerService(port, serviceType,serviceName, serviceDescription);
 
-        int port = Integer.valueOf(prop.getProperty("service_port"));
 
         try {
             Server server = ServerBuilder.forPort(port)
@@ -41,7 +41,7 @@ public class gRPCServer {
                     .addService(new Service4())
                     .build()
                     .start();
-            System.out.println("Server started, listening on "+port);
+            System.out.println("Server started, listening ");
 
             server.awaitTermination();
         }
@@ -54,40 +54,15 @@ public class gRPCServer {
 
     }
 
-    private Properties getProperties(){
-        Properties prop =null;
-        try (InputStream input = new FileInputStream("src/main/resources/math.properties")){
-            prop = new Properties();
 
-            prop.load(input);
-
-            System.out.println("Service properies ...");
-            System.out.println("\t service_type: "+prop.getProperty("service_type"));
-            System.out.println("\t service_name: "+prop.getProperty("service_name"));
-            System.out.println("\t service_description: "+prop.getProperty("service_description"));
-            System.out.println("\t service_port: "+prop.getProperty("service_port"));
-        }
-        catch (IOException ex) {
-            ex.printStackTrace();
-        }
-        return prop;
-    }
-
-    private void registerService(Properties prop){
+    private void registerService(int port, String serviceType, String serviceName, String serviceDescription){
         try {
             JmDNS jmdns = JmDNS.create(InetAddress.getLocalHost());
 
-            String service_type = prop.getProperty("service_type");
-            String service_name = prop.getProperty("service_name");
-
-            int service_port = Integer.valueOf(prop.getProperty("service_port"));
-
-            String service_description_properties = prop.getProperty("service_description");
-
-            ServiceInfo serviceInfo = ServiceInfo.create(service_type, service_name, service_port, service_description_properties);
+            ServiceInfo serviceInfo = ServiceInfo.create(serviceType, serviceName, port, serviceDescription);
             jmdns.registerService(serviceInfo);
 
-            System.out.printf("registering service with type %s and name %s \n",service_type, service_name);
+            System.out.printf("registering service with type %s and name %s \n",serviceType, serviceName);
 
             Thread.sleep(1000);
         }

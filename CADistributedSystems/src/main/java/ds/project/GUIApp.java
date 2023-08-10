@@ -48,7 +48,6 @@ public class GUIApp extends JFrame {
 	private JTextField tFWidth;
 	private JTextField tFLength;
 	private JTextField tFHeigth;
-
 	private JTextArea textResponse;
 	private JTextField tFPowerConsumed;
 	private JTextField tFCostElectricity;
@@ -418,8 +417,6 @@ public class GUIApp extends JFrame {
 		
 		
 		//SERVICE 3 - CLIENT STREAMING
-
-		
 		JLabel Service3Label = new JLabel("Service 3 (Client Streaming)");
 		Service3Label.setFont(new Font("Verdana", Font.BOLD, 14));
 		Service3Label.setBounds(179, 364, 316, 21);
@@ -436,8 +433,10 @@ public class GUIApp extends JFrame {
 		JButton addDatesButton = new JButton("Add >>>");
 		addDatesButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+
 				String startDate = StartFormattedTextField.getText();
 				String endDate = EndFormattedTextField.getText();
+				boolean hasError = false;
 
 				Service3OuterClass.scheduleRequest dateTimePair = Service3OuterClass.scheduleRequest.newBuilder()
 						.setStartDate(startDate)
@@ -445,6 +444,12 @@ public class GUIApp extends JFrame {
 						.build();
 				dateTimesList.add(dateTimePair);
 
+
+
+				SwingUtilities.invokeLater(()->{
+					responseDateTimesTextArea.append("Added\n");
+
+				});
 
 			}
 		});
